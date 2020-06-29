@@ -40,7 +40,7 @@ const Profile = () => {
               width: "108%",
             }}
           >
-            <h5>10 posts</h5>
+            <h5>{data.length} posts</h5>
             <h5>10 followers</h5>
             <h5>10 following</h5>
           </div>
