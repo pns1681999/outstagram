@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../App";
 import {Link} from 'react-router-dom';
-const Home = () => {
+const SubscriberUserPost = () => {
   const [data, setData] = useState([]);
   const { state, dispatch } = useContext(UserContext);
   useEffect(() => {
-    fetch("/allpost", {
+    fetch("/getsubpost", {
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("jwt"),
       },
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
+        //console.log(result);
         setData(result.posts);
       });
   }, []);
@@ -186,4 +186,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default SubscriberUserPost;
