@@ -7,17 +7,16 @@ const NavBar = () => {
   const renderList = () => {
     if (state) {
       return [
-        <li key="1"> <i className="large material-icons">insert_chart</i></li>,
-        <li key="2">
+        <li>
           <Link to="/profile">Profile</Link>
         </li>,
-        <li key="3">
+        <li>
           <Link to="/create">Create Post</Link>
         </li>,
-        <li key="4">
+        <li>
           <Link to="/myfollowingpost">My following Posts</Link>
         </li>,
-        <li key="5">
+        <li>
           <button
             className="btn #c62828 red darken-3"
             onClick={() => {
@@ -33,10 +32,10 @@ const NavBar = () => {
       ];
     } else {
       return [
-        <li key="6">
+        <li>
           <Link to="/signin">Sign In</Link>
         </li>,
-        <li key="7">
+        <li>
           <Link to="/signup">Sign Up</Link>
         </li>,
       ];
