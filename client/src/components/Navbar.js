@@ -1,13 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext ,useRef,useEffect} from "react";
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../App";
+import M from 'materialize-css'
 const NavBar = () => {
+  const searchModal=useRef(null)
+  const {search,setSearch}=useState('')
   const history = useHistory();
   const { state, dispatch } = useContext(UserContext);
+  useEffect(()=>{
+    M.Modal.init(searchModal.current)
+  },[])
   const renderList = () => {
     if (state) {
       return [
-        <li key="1"> <i className="large material-icons">insert_chart</i></li>,
+        <li key="1"> <i data-target="modal1" className="large material-icons modal-trigger" style={{color:"black"}}>search</i></li>,
         <li key="2">
           <Link to="/profile">Profile</Link>
         </li>,
@@ -51,6 +57,26 @@ const NavBar = () => {
         <ul id="nav-mobile" className="right">
           {renderList()}
         </ul>
+      </div>
+      <div id="modal1" class="modal" ref={searchModal} style={{color:"black"}}>
+        <div className="modal-content">
+        <input
+          type="text"
+          placeholder="Search"
+          value={search}
+          onChange={(e)=>setSearch(e.target.value)}
+
+        />
+        <ul className="collection">
+          <li className="collection-item">Alvin</li>
+          <li className="collection-item">Alvin</li>
+          <li className="collection-item">Alvin</li>
+          <li className="collection-item">Alvin</li>
+        </ul>
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat">Agree</button>
+        </div>
       </div>
     </nav>
   );
