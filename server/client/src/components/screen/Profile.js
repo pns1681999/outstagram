@@ -1,9 +1,19 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext,useRef } from "react";
 import {UserContext} from '../../App'
+import {Link } from 'react-router-dom'
+import M from 'materialize-css'
 const Profile = () => {
+  const  followingModal = useRef(null)
+  const  followedModal = useRef(null)
   const [data, setData] = useState([]);
   const {state, dispatch} = useContext(UserContext);
   const [image,setImage]=useState("");
+
+  useEffect(()=>{
+    M.Modal.init(followingModal.current)
+    M.Modal.init(followedModal.current)
+  },[])
+
   useEffect(() => {
     fetch("/mypost", {
       headers: {
@@ -18,6 +28,7 @@ const Profile = () => {
   }, []);
 
   useEffect(()=>{
+    
     if(image)
     {
     const data = new FormData();
@@ -90,8 +101,8 @@ const Profile = () => {
             }}
           >
             <h5>{data.length} posts</h5>
-            <h5>{state?state.followers.length:"0"} followers</h5>
-            <h5>{state?state.following.length:"0"} following</h5>
+            <h5 data-target="modal2" className=" modal-trigger">{state?state.followers.length:"0"} followers</h5>
+            <h5 data-target="modal3" className=" modal-trigger">{state?state.following.length:"0"} following</h5>
           </div>
         </div>
       </div>
@@ -111,7 +122,37 @@ const Profile = () => {
         </div>
       </div>
 
+      <div id="modal2" className="modal" ref={followedModal} style={{color:"black"}}>
+        <div className="modal-content">
+      
+                <h6>{state?state.followers.length:"0"}</h6>
+                {state?state.followers.map((item) => {
+                return   <Link to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
+                  M.Modal.getInstance(followedModal.current).close()
+                }}>
+                  <li className="collection-item">{item.name}</li></Link> 
+                }):""}
 
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div>
+      </div>
+
+      <div id="modal3" className="modal" ref={followingModal} style={{color:"black"}}>
+        <div className="modal-content">
+        <h6>{state?state.following.length:"0"}</h6>
+                {state?state.following.map((item) => {
+                return  <Link to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
+                  M.Modal.getInstance(followingModal.current).close()
+                }}>
+                  <li className="collection-item">{item.name}</li></Link> 
+                }):""}
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div>
+      </div>
 
         </div>
       <div className="gallery" >

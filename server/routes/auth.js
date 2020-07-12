@@ -2,12 +2,20 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
+const crypto=require("crypto");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const {JWT_SECRET} = require('../config/keys');
 const requireLogin = require('../middleware/requireLogin')
-
-
+const nodemailer=require('nodemailer')
+const sendgridTransport =require('nodemailer-sendgrid-transport')
+const {SENDGRID_API,EMAIL} = require('../config/keys')
+//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
+const transporter=nodemailer.createTransport(sendgridTransport({
+  auth:{
+    api_key:"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"
+  }
+}))
 router.get('/protected',requireLogin, (req, res) => {
     res.send('Hello');
 });
@@ -33,10 +41,17 @@ router.post("/signup", (req, res) => {
           pic
         });
 
-        user
-          .save()
+        user.save()
           .then((user) => {
-            res.json({ message: "saved successfully" });
+            transporter.sendMail({
+              to:user.email ,
+              from :"1712743@student.hcmus.edu.vn",
+              subject:"signup success",
+              html:"<h1>welcome to outstagram</h1>"
+            }).then(()=>{
+              res.json({ message: "saved successfully" });
+            })
+            
           })
           .catch((err) => {
             console.log(err);
@@ -54,6 +69,8 @@ router.post("/signin", (req, res) => {
     return res.status(422).json({ error: "please add email or password" });
   }
   User.findOne({ email: email })
+  .populate("followers", "_id name")
+  .populate("following", "_id name")
   .then((savedUser) => {
     if (!savedUser) {
         return res.status(422).json({ error: "Invalid email or password"});
@@ -76,4 +93,55 @@ router.post("/signin", (req, res) => {
   });
 
 });
+router.post('/reset-password',(req,res)=>{
+  crypto.randomBytes(32,(err,buffer)=>{
+    if(err){
+      console.log(err)
+    }
+    const token=buffer.toString("hex")
+    User.findOne({email:req.body.email}).then(user=>{
+      if(!user)
+        {return res.status(422).json({error:"User dont with this mail"})}
+
+        user.resetToken=token
+        user.expireToken=Date.now()+3600000
+        user.save().then((result)=>{
+          transporter.sendMail({
+            to:user.email ,
+            from :"1712743@student.hcmus.edu.vn",
+            subject:"password reset",
+            html:`<p>You  requested for password reset</p>
+                  <h5>click in that <a href="http://localhost:3000/reset/${token}">link</a> to reset password</h5>`
+          })
+          res.json({message:"check your email"})
+        })
+
+
+    })
+
+  })
+})
+
+
+router.post('/new-password',(req,res)=>{
+  const newPassword = req.body.password
+  const sentToken = req.body.token
+  User.findOne({resetToken:sentToken,expireToken:{$gt:Date.now()}})
+  .then(user=>{
+      if(!user){
+          return res.status(422).json({error:"Try again session expired"})
+      }
+      bcrypt.hash(newPassword,12).then(hashedpassword=>{
+         user.password = hashedpassword
+         user.resetToken = undefined
+         user.expireToken = undefined
+         user.save().then((saveduser)=>{
+             res.json({message:"password updated success"})
+         })
+      })
+  }).catch(err=>{
+      console.log(err)
+  })
+})
+
 module.exports = router;

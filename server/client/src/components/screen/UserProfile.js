@@ -1,12 +1,20 @@
-import React, { useEffect, useState, useContext } from "react";
+import React,{useContext,useRef,useEffect,useState} from 'react'
 import { UserContext } from "../../App";
 import { useParams } from "react-router-dom";
+import M from 'materialize-css'
 const UserProfile = () => {
+  const  followingModalu = useRef(null)
+  const  followedModalu = useRef(null)
   const [userProfile, setProfile] = useState(null);
   const { state, dispatch } = useContext(UserContext);
   const { userid } = useParams();
   const [showFollow,setShowFollow] = useState(state ? !state.following.includes(userid):true);
 
+
+  useEffect(()=>{
+    M.Modal.init(followingModalu.current)
+    M.Modal.init(followedModalu.current)
+  },[])
   useEffect(() => {
     fetch(`/user/${userid}`, {
       headers: {
@@ -112,9 +120,9 @@ const UserProfile = () => {
                   width: "108%",
                 }}
               >
-                <h6>{userProfile.posts.length} posts</h6>
-                <h6>{userProfile.user.followers.length} followers</h6>
-                <h6>{userProfile.user.following.length} following</h6>
+                <h5>{userProfile.posts.length} posts</h5>
+                <h5 data-target="modal4" className=" modal-trigger">{userProfile.user.followers.length} followers</h5>
+                <h5 data-target="modal5" className=" modal-trigger">{userProfile.user.following.length} following</h5>
               </div>
               {showFollow?
                 <button
@@ -140,6 +148,25 @@ const UserProfile = () => {
               
               
             </div>
+
+        <div id="modal4" className="modal" ref={followingModalu} style={{color:"black"}}>
+        <div className="modal-content">
+        kkkkkkkkkkkk
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div>
+      </div>
+
+      <div id="modal5" className="modal" ref={followedModalu} style={{color:"black"}}>
+        <div className="modal-content">
+        kkkkkkkkkfff
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div>
+      </div>
+
           </div>
           <div className="gallery">
             {userProfile.posts.map((item) => {
