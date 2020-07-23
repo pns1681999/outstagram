@@ -125,7 +125,13 @@ const SubscriberUserPost = () => {
       {data.map((item) => {
         return (
           <div className="card home-card" key={item._id}>
-            <h5 style={{padding: "5px"}}><Link to={item.postedBy._id!=state._id?'/profile/'+item.postedBy._id : '/profile'}>{item.postedBy.name}</Link>
+            <h5 className="post-title-container"> 
+              <div className="post-title-avatar-postedBy">  
+                <img src={item.postedBy.pic} className="post-title-avatar"/> 
+                <Link to={item.postedBy._id!=state._id?'/profile/'+item.postedBy._id : '/profile'} className="post-title-postedBy">
+                  {item.postedBy.name}
+                </Link> 
+              </div>
               {
                 item.postedBy._id==state._id &&
                 <i
@@ -141,27 +147,28 @@ const SubscriberUserPost = () => {
             <div className="card-image">
               <img src={item.photo} />
             </div>
-            <div className="card-content">
-              {item.likes.includes(state._id) ? (
-                <i
-                  className="material-icons"
-                  style={{ color: "red" }}
-                  onClick={() => unlikePost(item._id)}
-                >
-                  favorite
-                </i>
-              ) : (
-                <i
-                  className="material-icons"
-                  onClick={() => likePost(item._id)}
-                >
-                  favorite_border
-                </i>
-              )}
+            <div className="card-content post-content">
+              <div className="like-container">
+                {item.likes.includes(state._id) ? (
+                  <i
+                    className="material-icons"
+                    style={{ color: "red" }}
+                    onClick={() => unlikePost(item._id)}
+                  >
+                    favorite
+                  </i>
+                ) : (
+                  <i
+                    className="material-icons"
+                    onClick={() => likePost(item._id)}
+                  >
+                    favorite_border
+                  </i>
+                )}
 
-              <h6>{item.likes.length} likes</h6>
-
-              <h6>{item.title}</h6>
+                <h6 className="text-bold">{item.likes.length} likes</h6>
+              </div>
+              <h6><span className="text-bold">{item.postedBy.name} </span>{item.title}</h6>
               <p>{item.body}</p>
               {
                 item.comments.map(record=>{
@@ -173,7 +180,10 @@ const SubscriberUserPost = () => {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  makeComment(e.target[0].value, item._id);
+                  if (e.target[0].value){
+                    makeComment(e.target[0].value, item._id);
+                    e.target[0].value=null;
+                  }
                 }}
               >
                 <input type="text" placeholder="add a comment" />

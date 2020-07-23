@@ -173,10 +173,11 @@ const Home = () => {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  makeComment(e.target[0].value, item._id);
+                  console.log(e.target[0].value);
+                    //makeComment(e.target[0].value, item._id);
                 }}
               >
-                <input type="text" placeholder="add a comment" />
+                {/* <input type="text" placeholder="add a comment" class="validate"/> */}
               </form>
             </div>
           </div>

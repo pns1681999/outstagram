@@ -103,20 +103,23 @@ const Signup = () => {
           <input
             className="file-path validate"
             type="text"
-            placeholder="Upload one or more files"
+            placeholder="Avatar image"
           />
         </div>
       </div>
 
         <button
-          className="btn waves-effect waves-light #64b5f6 blue darken-1"
+          className="login-btn btn waves-effect waves-light #64b5f6 blue darken-1"
           onClick={() => postData()}
         >
           Sign up
         </button>
-        <h5>
-          <Link to="/signin">Already have an account?</Link>
-        </h5>
+        
+      </div>
+      <div className="card auth-card input-field">
+        <h6>
+        Already have an account? <Link to="/signin" className="blue-link">Sign in</Link>
+        </h6>
       </div>
     </div>
   );

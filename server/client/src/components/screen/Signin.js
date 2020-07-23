@@ -59,17 +59,20 @@ const Signin = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
-          className="btn waves-effect waves-light #64b5f6 blue darken-1"
+          className="login-btn btn waves-effect waves-light #64b5f6 blue darken-1"
           onClick={() => postData()}
         >
           Login
         </button>
-        <h5>
-          <Link to="/signup">Don't have an account?</Link>
-          
-        </h5>
+        
         <h6>
-          <Link to="/reset">Forgot Password</Link>
+          <Link to="/reset" className="blue-link">Forgot password?</Link>
+        </h6>
+      </div>
+      <div className="card auth-card input-field">
+        <h6>
+          Don't have an account? <Link to="/signup" className = "blue-link">Sign up</Link>
+        
         </h6>
       </div>
     </div>
