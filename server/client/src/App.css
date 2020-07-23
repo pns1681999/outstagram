@@ -97,9 +97,9 @@ nav{
 }
 
 .gallery{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  grid-gap: 2rem;
 }
 
 .item{
@@ -123,4 +123,44 @@ nav{
 }
 .material-icons:hover{
   cursor: pointer;
+}
+
+.profile-container{
+  max-width: 740px;
+  margin: 0px auto;
+}
+
+.profile-title-container{
+    margin: 18px 0px;
+    border-bottom: 1px solid grey;
+}
+
+.profile-title{
+    display: flex;
+    justify-content: space-around;
+}
+
+.profile-avatar{
+  width: 160px;
+  height: 160px;
+  border-radius: 80px;
+  object-fit:cover
+}
+
+.profile-addbtn-container{
+  margin:0 0.35rem;
+  position:absolute;
+  right:0;
+  bottom:0;
+}
+
+.profile-addbtn{
+  font-size:3rem;
+  color:#64b5f6;
+}
+
+.profile-detail{
+  display: flex;
+  justify-content: space-between;
+  width: 108%;
 }

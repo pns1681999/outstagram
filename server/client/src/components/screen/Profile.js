@@ -69,58 +69,48 @@ const Profile = () => {
     
   }
   return (
-    <div style={{ maxWidth: "550px", margin: "0px auto" }}>
+    <div className="profile-container">
       
-    <div  style={{
-         
-          margin: "18px 0px",
-          borderBottom: "1px solid grey",
-        }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-        }}
-      >
-        <div>
+    <div  className="profile-title-container">
+      <div className="profile-title">
+        <div style={{position:"relative"}}>
           <img
-            style={{ width: "160px", height: "160px", borderRadius: "80px", objectFit:"cover" }}
+            className="profile-avatar"
             src={state?state.pic:"loading"}
           />
+          <div className="file-field input-field profile-addbtn-container" >
+            {/* <div className="btn #64b5f6 blue darken-1">
+              <span>Update pic</span>
+              <input type="file" multiple onChange={(e)=>updatePhoto(e.target.files[0])}/>
+            </div> */}
+            <i className="material-icons profile-addbtn">
+              add_circle
+              <input type="file" multiple onChange={(e)=>updatePhoto(e.target.files[0])}/>
+            </i>
+            {/* <div className="file-path-wrapper">
+              <input
+                className="file-path validate"
+                type="text"
+                placeholder="Upload one or more files"
+              />
+            </div> */}
+          </div>
          
         </div>
         <div>
-          <h4>{state?state.name:"loading..."}</h4>
-          <h5>{state?state.email:"loading..."}</h5>
+          <h5>{state?state.name:"loading..."}</h5>
+          <h6>{state?state.email:"loading..."}</h6>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "108%",
-            }}
-          >
-            <h5>{data.length} posts</h5>
-            <h5 data-target="modal2" className=" modal-trigger">{state?state.followers.length:"0"} followers</h5>
-            <h5 data-target="modal3" className=" modal-trigger">{state?state.following.length:"0"} following</h5>
+          <div className="profile-detail">
+            <h6><span className="text-bold">{data.length}</span> posts</h6>
+            <h6 data-target="modal2" className=" modal-trigger"><span className="text-bold">{state?state.followers.length:"0"}</span> followers</h6>
+            <h6 data-target="modal3" className=" modal-trigger"><span className="text-bold">{state?state.following.length:"0"}</span> following</h6>
           </div>
         </div>
       </div>
       
       
-      <div className="file-field input-field" style={{margin:"10px"}}>
-        <div className="btn #64b5f6 blue darken-1">
-          <span>Update pic</span>
-          <input type="file" multiple onChange={(e)=>updatePhoto(e.target.files[0])}/>
-        </div>
-        <div className="file-path-wrapper">
-          <input
-            className="file-path validate"
-            type="text"
-            placeholder="Upload one or more files"
-          />
-        </div>
-      </div>
+      
 
       <div id="modal2" className="modal" ref={followedModal} style={{color:"black"}}>
         <div className="modal-content">
@@ -157,7 +147,7 @@ const Profile = () => {
         </div>
       <div className="gallery" >
         {data.map((item) => {
-          return <img key={item._id} className="item" src={item.photo} alt={item.title} />;
+          return <img key={item._id} className="item" src={item.photo} alt={item.title} style={{width:"15rem", height:"15rem", objectFit:"contain", border:"#dedede solid 1px"}}/>;
         })}
       </div>
     </div>
