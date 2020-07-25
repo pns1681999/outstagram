@@ -90,39 +90,22 @@ const UserProfile = () => {
   return (
     <>
       {userProfile ? (
-        <div style={{ maxWidth: "550px", margin: "0px auto" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              margin: "18px 0px",
-              borderBottom: "1px solid grey",
-            }}
-          >
+        <div className="profile-container">
+          <div className="profile-title-container profile-title">
             <div>
-              <img
-                style={{
-                  width: "160px",
-                  height: "160px",
-                  borderRadius: "80px",
-                }}
+              <img 
+                className="profile-avatar"
                 src={userProfile.user.pic}
               />
             </div>
             <div>
-              <h4>{userProfile.user.name}</h4>
-              <h5>{userProfile.user.email}</h5>
+              <h5>{userProfile.user.name}</h5>
+              <h6>{userProfile.user.email}</h6>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "108%",
-                }}
-              >
-                <h5>{userProfile.posts.length} posts</h5>
-                <h5 data-target="modal4" className=" modal-trigger">{userProfile.user.followers.length} followers</h5>
-                <h5 data-target="modal5" className=" modal-trigger">{userProfile.user.following.length} following</h5>
+              <div className="profile-detail">
+                <h6><span className="text-bold">{userProfile.posts.length}</span> posts</h6>
+                <h6 data-target="modal4" className=" modal-trigger"><span className="text-bold">{userProfile.user.followers.length}</span> followers</h6>
+                <h6 data-target="modal5" className=" modal-trigger"><span className="text-bold">{userProfile.user.following.length}</span> following</h6>
               </div>
               {showFollow?
                 <button
@@ -173,7 +156,7 @@ const UserProfile = () => {
               return (
                 <img
                   key={item._id}
-                  className="item"
+                  className="item profile-post"
                   src={item.photo}
                   alt={item.title}
                 />

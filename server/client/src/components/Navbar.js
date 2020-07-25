@@ -14,20 +14,51 @@ const NavBar = () => {
    const renderList = ()=>{
      if(state){
          return [
-          <li key="1"><i  data-target="modal1" className="large material-icons modal-trigger" style={{color:"black"}}>search</i></li>,
-          <li key="2"><Link to="/profile">Profile</Link></li>,
-          <li key="3"><Link to="/create">Create Post</Link></li>,
-          <li key="4"><Link to="/myfollowingpost">My following Posts</Link></li>,
+          <li key="1" ><i  data-target="modal1" className="large material-icons modal-trigger nav-item" style={{color: "black"}}>search</i></li>,
+          <li key="2"><Link to="/profile" className="nav-item">
+            <i
+              className="material-icons"
+            >
+              perm_identity
+            </i></Link>
+          </li>,
+          <li key="3"><Link to="/create" className="nav-item"> 
+            <i
+              className="material-icons"
+            >
+              add
+            </i></Link>
+        </li>,
+          <li key="4"><Link to="/myfollowingpost" className="nav-item">
+            <i
+              className="material-icons"
+            >
+              favorite_border
+            </i>  
+          </Link></li>,
           <li  key="5">
-           <button className="btn #c62828 red darken-3"
+           {/* <button className="btn #c62828 red darken-3"
           onClick={()=>{
             localStorage.clear()
             dispatch({type:"CLEAR"})
             history.push('/signin')
           }}
+          
           >
               Logout
-          </button>
+          </button> */}
+          <Link className="nav-item">
+          <i
+              className="material-icons"
+              onClick={()=>{
+                localStorage.clear()
+                dispatch({type:"CLEAR"})
+                history.push('/signin')
+              }}
+            >
+              exit_to_app
+            </i>
+            </Link>
           </li>
        
           

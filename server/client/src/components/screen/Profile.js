@@ -147,7 +147,7 @@ const Profile = () => {
         </div>
       <div className="gallery" >
         {data.map((item) => {
-          return <img key={item._id} className="item" src={item.photo} alt={item.title} style={{width:"15rem", height:"15rem", objectFit:"contain", border:"#dedede solid 1px"}}/>;
+          return <img key={item._id} className="item profile-post" src={item.photo} alt={item.title}/>;
         })}
       </div>
     </div>

@@ -48,6 +48,10 @@ nav{
   color: #0095f6 !important;
 }
 
+.nav-item{
+  padding: 0 0.75rem;
+}
+
 .auth-card{
   padding: 20px 40px;
   text-align: center;
@@ -107,7 +111,7 @@ nav{
 }
 
 .home-card{
-  max-width: 500px;
+  max-width: 615px;
   height: max-content;
   margin: 26px auto;
 }
@@ -163,4 +167,11 @@ nav{
   display: flex;
   justify-content: space-between;
   width: 108%;
+}
+
+.profile-post{
+  width:15rem;
+  height:15rem;
+  object-fit:contain;
+  border:#dedede solid 1px;
 }
