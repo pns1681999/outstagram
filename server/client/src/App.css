@@ -68,11 +68,13 @@ nav{
 }
 
 .post-title-avatar-postedBy{
+  background-color: white;
   display: inline-flex;
   align-items: center;
 }
 
 .post-title-avatar{
+  background-color: white;
   width:2rem;
   height:2rem;
   border-radius:15px;
@@ -123,6 +125,9 @@ nav{
 
 }
 .collection-item{
+  display: flex;
+  align-items: center;
+  margin: 0.75rem 0;
   width: 100%;
 }
 .material-icons:hover{
@@ -136,7 +141,7 @@ nav{
 
 .profile-title-container{
     margin: 18px 0px;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid #dedede;
 }
 
 .profile-title{
@@ -145,10 +150,20 @@ nav{
 }
 
 .profile-avatar{
+  background-color: white;
   width: 160px;
   height: 160px;
   border-radius: 80px;
   object-fit:cover
+}
+
+.profile-follow-avatar{
+  width: 2rem;
+  height: 2rem;
+  background-color: white;
+  border-radius: 80px;
+  object-fit:cover;
+  margin-right: 0.5rem;
 }
 
 .profile-addbtn-container{
@@ -174,4 +189,17 @@ nav{
   height:15rem;
   object-fit:contain;
   border:#dedede solid 1px;
+  background-color: white;
+
+}
+
+.card-create-post{
+  margin: 10% auto;
+  max-width: 500px;
+  padding: 20px;
+  text-align: center;
+}
+
+.can-click:hover{
+  cursor: pointer;
 }

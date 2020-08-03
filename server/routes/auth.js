@@ -69,8 +69,8 @@ router.post("/signin", (req, res) => {
     return res.status(422).json({ error: "please add email or password" });
   }
   User.findOne({ email: email })
-  .populate("followers", "_id name")
-  .populate("following", "_id name")
+  .populate("followers", "_id name pic")
+  .populate("following", "_id name pic")
   .then((savedUser) => {
     if (!savedUser) {
         return res.status(422).json({ error: "Invalid email or password"});

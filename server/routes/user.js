@@ -7,6 +7,8 @@ const User = mongoose.model("User");
 
 router.get('/user/:id',requireLogin, (req,res)=>{
     User.findOne({_id: req.params.id})
+    .populate("followers", "_id name pic")
+    .populate("following", "_id name pic")
     .select("-password")
     .then(user=>{
         Post.find({postedBy:req.params.id})
@@ -34,7 +36,7 @@ router.put('/follow', requireLogin, (req,res)=>{
         User.findByIdAndUpdate(req.user._id,{
             $push:{following:req.body.followId}
         }, {new:true})
-        .populate("following", "_id name").select("-password").then(result=>{
+        .populate("following", "_id name pic").select("-password").then(result=>{
             res.json(result)
         }).catch(err=>{
             return res.status(422).json({error:err})
@@ -54,7 +56,7 @@ router.put('/unfollow', requireLogin, (req,res)=>{
         User.findByIdAndUpdate(req.user._id,{
             $pull:{following:req.body.unfollowId}
         }, {new:true})
-        .populate("following", "_id name").select("-password").then(result=>{
+        .populate("following", "_id name pic").select("-password").then(result=>{
             res.json(result)
         }).catch(err=>{
             return res.status(422).json({error:err})

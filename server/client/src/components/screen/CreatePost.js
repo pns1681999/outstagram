@@ -60,20 +60,15 @@ const CreatePost = () => {
 
 
   return (
-    <div
-      className="card input-field"
-      style={{
-        margin: "10px auto",
-        maxWidth: "500px",
-        padding: "20px",
-        textAlign: "center",
-      }}
-    >
+    <div className="card input-field card-create-post">
       <input type="text" placeholder="title" value={title} onChange={(e)=>setTitle(e.target.value)}/>
       <input type="text" placeholder="status" value={body} onChange={(e)=>setBody(e.target.value)}/>
       <div className="file-field input-field">
         <div className="btn #64b5f6 blue darken-1">
-          <span>Upload Image</span>
+          {/* <span>Upload Image</span> */}
+          <i className="material-icons">
+            cloud_upload
+            </i>
           <input type="file" multiple onChange={(e)=>setImage(e.target.files[0])}/>
         </div>
         <div className="file-path-wrapper">

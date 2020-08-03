@@ -103,8 +103,8 @@ const Profile = () => {
 
           <div className="profile-detail">
             <h6><span className="text-bold">{data.length}</span> posts</h6>
-            <h6 data-target="modal2" className=" modal-trigger"><span className="text-bold">{state?state.followers.length:"0"}</span> followers</h6>
-            <h6 data-target="modal3" className=" modal-trigger"><span className="text-bold">{state?state.following.length:"0"}</span> following</h6>
+            <h6 data-target="modal2" className=" modal-trigger can-click"><span className="text-bold">{state?state.followers.length:"0"}</span> followers</h6>
+            <h6 data-target="modal3" className=" modal-trigger can-click"><span className="text-bold">{state?state.following.length:"0"}</span> following</h6>
           </div>
         </div>
       </div>
@@ -115,12 +115,20 @@ const Profile = () => {
       <div id="modal2" className="modal" ref={followedModal} style={{color:"black"}}>
         <div className="modal-content">
       
-                <h6>{state?state.followers.length:"0"}</h6>
+                <h5 style={{textAlign:"center"}}>Followers</h5>
+
+                
                 {state?state.followers.map((item) => {
                 return   <Link to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followedModal.current).close()
                 }}>
-                  <li className="collection-item">{item.name}</li></Link> 
+                  <div className="collection-item">
+                    <img
+                      className="profile-follow-avatar"
+                      src={item.pic}
+                    />
+                    <span className="text-bold"> {item.name} </span>
+                  </div></Link> 
                 }):""}
 
         </div>
@@ -131,13 +139,19 @@ const Profile = () => {
 
       <div id="modal3" className="modal" ref={followingModal} style={{color:"black"}}>
         <div className="modal-content">
-        <h6>{state?state.following.length:"0"}</h6>
-                {state?state.following.map((item) => {
+        <h5 style={{textAlign:"center"}}>Following</h5>
+                {state?  state.following.map((item) => {
                 return  <Link to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followingModal.current).close()
                 }}>
-                  <li className="collection-item">{item.name}</li></Link> 
-                }):""}
+                  <div className="collection-item">
+                    <img
+                      className="profile-follow-avatar"
+                      src={item.pic}
+                    />
+                    <span className="text-bold"> {item.name} </span>
+                  </div></Link> 
+                }):<h6>No following.</h6>}
         </div>
         <div className="modal-footer">
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>

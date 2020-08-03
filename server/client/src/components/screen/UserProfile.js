@@ -1,20 +1,35 @@
 import React,{useContext,useRef,useEffect,useState} from 'react'
 import { UserContext } from "../../App";
 import { useParams } from "react-router-dom";
-import M from 'materialize-css'
+import {Link} from 'react-router-dom';
+import M from 'materialize-css';
 const UserProfile = () => {
   const  followingModalu = useRef(null)
   const  followedModalu = useRef(null)
-  const [userProfile, setProfile] = useState(null);
-  const { state, dispatch } = useContext(UserContext);
-  const { userid } = useParams();
-  const [showFollow,setShowFollow] = useState(state ? !state.following.includes(userid):true);
-
 
   useEffect(()=>{
     M.Modal.init(followingModalu.current)
     M.Modal.init(followedModalu.current)
   },[])
+
+  const [userProfile, setProfile] = useState(null);
+  const { state, dispatch } = useContext(UserContext);
+  const { userid } = useParams();
+
+  const [showFollow,setShowFollow] = useState((state ? ()=>{
+    var found = true;
+    for(var i = 0; i < state.following.length; i++) {
+        if (state.following[i]._id == userid) {
+            found = false;
+            break;
+        }
+    }
+    return found;
+  }:true));
+
+
+  
+
   useEffect(() => {
     fetch(`/user/${userid}`, {
       headers: {
@@ -23,7 +38,7 @@ const UserProfile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        //console.log(result);
+        // console.log(result);
         setProfile(result);
       });
   }, []);
@@ -104,8 +119,8 @@ const UserProfile = () => {
 
               <div className="profile-detail">
                 <h6><span className="text-bold">{userProfile.posts.length}</span> posts</h6>
-                <h6 data-target="modal4" className=" modal-trigger"><span className="text-bold">{userProfile.user.followers.length}</span> followers</h6>
-                <h6 data-target="modal5" className=" modal-trigger"><span className="text-bold">{userProfile.user.following.length}</span> following</h6>
+                <h6 data-target="modal4" className="modal-trigger can-click"><span className="text-bold">{userProfile.user.followers.length}</span> followers</h6>
+                <h6 data-target="modal5" className="modal-trigger can-click"><span className="text-bold">{userProfile.user.following.length}</span> following</h6>
               </div>
               {showFollow?
                 <button
@@ -132,23 +147,9 @@ const UserProfile = () => {
               
             </div>
 
-        <div id="modal4" className="modal" ref={followingModalu} style={{color:"black"}}>
-        <div className="modal-content">
-        kkkkkkkkkkkk
-        </div>
-        <div className="modal-footer">
-          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
-        </div>
-      </div>
+       
 
-      <div id="modal5" className="modal" ref={followedModalu} style={{color:"black"}}>
-        <div className="modal-content">
-        kkkkkkkkkfff
-        </div>
-        <div className="modal-footer">
-          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
-        </div>
-      </div>
+      
 
           </div>
           <div className="gallery">
@@ -163,11 +164,57 @@ const UserProfile = () => {
               );
             })}
           </div>
+          
         </div>
       ) : (
         <h2>loading...</h2>
       )}
+       <div id="modal4" className="modal" ref={followedModalu} style={{color:"black"}}>
+          <div className="modal-content">
+      
+                <h5 style={{textAlign:"center"}}>Followers</h5>
+                {userProfile?userProfile.user.followers.map((item) => {
+                  return   <Link to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
+                    M.Modal.getInstance(followedModalu.current).close()
+                  }}>
+                    <div className="collection-item">
+                      <img
+                        className="profile-follow-avatar"
+                        src={item.pic}
+                      />
+                      <span className="text-bold"> {item.name} </span>
+                    </div></Link> 
+                  }):""
+                }
+
+          </div>
+          <div className="modal-footer">
+            <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+          </div>
+      </div>
+
+      <div id="modal5" className="modal" ref={followingModalu} style={{color:"black"}}>
+        <div className="modal-content">
+          <h5 style={{textAlign:"center"}}>Following</h5>
+                {userProfile?  userProfile.user.following.map((item) => {
+                return  <Link to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
+                  M.Modal.getInstance(followingModalu.current).close()
+                }}>
+                  <div className="collection-item">
+                    <img
+                      className="profile-follow-avatar"
+                      src={item.pic}
+                    />
+                    <span className="text-bold">{item.name} </span>
+                  </div></Link> 
+                }):<h6>No following.</h6>}
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div>
+      </div>
     </>
+
   );
 };
 
