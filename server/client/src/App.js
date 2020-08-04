@@ -14,6 +14,8 @@ import Reset from "./components/screen/Reset"
 import NewPassword from "./components/screen/Newpassword"
 export const UserContext = createContext();
 
+
+
 const Routing = () => {
   const history = useHistory();
   const {state, dispatch} = useContext(UserContext);
@@ -26,6 +28,7 @@ const Routing = () => {
            history.push('/signin')
     }
   },[])
+
   return (
     <Switch>
       <Route exact path="/">
@@ -61,6 +64,7 @@ const Routing = () => {
 };
 
 function App() {
+
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <UserContext.Provider value={{ state, dispatch }}>

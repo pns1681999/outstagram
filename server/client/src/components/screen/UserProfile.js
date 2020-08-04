@@ -27,6 +27,18 @@ const UserProfile = () => {
     return found;
   }:true));
 
+  useEffect(()=>{
+    if (state) {
+        var found = true;
+        for(var i = 0; i < state.following.length; i++) {
+            if (state.following[i]._id == userid) {
+                found = false;
+                break;
+            }
+        }
+        setShowFollow(found);
+  }}, [state]);
+
 
   
 
@@ -64,10 +76,11 @@ const UserProfile = () => {
             ...prevState,
             user:{
               ...prevState.user,
-              followers:[...prevState.user.followers,data._id]
+              followers:[...prevState.user.followers,{pic:data.pic, _id: data._id, name:data.name}]
             }
           }
         })
+        //console.log(userProfile)
         setShowFollow(false)
       });
   };
@@ -85,11 +98,11 @@ const UserProfile = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         dispatch({type:"UPDATE", payload:{following:data.following, followers:data.followers}})
         localStorage.setItem("user", JSON.stringify(data))
         setProfile((prevState)=>{
-          const newFollower = prevState.user.followers.filter(item=>item != data._id)
+          const newFollower = prevState.user.followers.filter(item=>item._id != data._id)
           return {
             ...prevState,
             user:{
@@ -174,7 +187,7 @@ const UserProfile = () => {
       
                 <h5 style={{textAlign:"center"}}>Followers</h5>
                 {userProfile?userProfile.user.followers.map((item) => {
-                  return   <Link to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
+                  return   <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                     M.Modal.getInstance(followedModalu.current).close()
                   }}>
                     <div className="collection-item">
@@ -197,7 +210,7 @@ const UserProfile = () => {
         <div className="modal-content">
           <h5 style={{textAlign:"center"}}>Following</h5>
                 {userProfile?  userProfile.user.following.map((item) => {
-                return  <Link to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
+                return  <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followingModalu.current).close()
                 }}>
                   <div className="collection-item">

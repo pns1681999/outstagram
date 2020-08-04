@@ -22,7 +22,7 @@ const Profile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result)
+        //console.log(result)
         setData(result.myposts);
       });
   }, []);
@@ -50,7 +50,7 @@ const Profile = () => {
         body:JSON.stringify({pic:data.url })
       }).then(res=>res.json())
       .then(result=>{
-        console.log(result)
+        //console.log(result)
         localStorage.setItem("user",JSON.stringify({...state,pic:result.pic}))
         dispatch({type:"UPDATEPIC",payload:result.pic})
         window.location.reload()
@@ -119,7 +119,8 @@ const Profile = () => {
 
                 
                 {state?state.followers.map((item) => {
-                return   <Link to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
+                //console.log(state)
+                return   <Link key={item._id} to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followedModal.current).close()
                 }}>
                   <div className="collection-item">
@@ -141,7 +142,7 @@ const Profile = () => {
         <div className="modal-content">
         <h5 style={{textAlign:"center"}}>Following</h5>
                 {state?  state.following.map((item) => {
-                return  <Link to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
+                return  <Link key={item._id} to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followingModal.current).close()
                 }}>
                   <div className="collection-item">
