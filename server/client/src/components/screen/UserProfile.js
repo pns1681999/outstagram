@@ -16,6 +16,8 @@ const UserProfile = () => {
   const { state, dispatch } = useContext(UserContext);
   const { userid } = useParams();
 
+  //console.log(userid)
+
   const [showFollow,setShowFollow] = useState((state ? ()=>{
     var found = true;
     for(var i = 0; i < state.following.length; i++) {
@@ -50,10 +52,10 @@ const UserProfile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        // console.log(result);
+        //console.log(result);
         setProfile(result);
       });
-  }, []);
+  }, [userid]);
 
   const followUser = () => {
     fetch("/follow", {
@@ -121,10 +123,12 @@ const UserProfile = () => {
         <div className="profile-container">
           <div className="profile-title-container profile-title">
             <div>
+              <Link to="/profile/5efeb2d9ec69f00d5c81a3a2">
               <img 
                 className="profile-avatar"
                 src={userProfile.user.pic}
               />
+              </Link>
             </div>
             <div>
               <h5>{userProfile.user.name}</h5>
