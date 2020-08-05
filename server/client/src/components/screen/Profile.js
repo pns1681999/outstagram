@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext,useRef } from "react";
 import {UserContext} from '../../App'
 import {Link } from 'react-router-dom'
+import ModalImage from 'react-modal-image'
 import M from 'materialize-css'
 const Profile = () => {
   const  followingModal = useRef(null)
@@ -162,7 +163,8 @@ const Profile = () => {
         </div>
       <div className="gallery" >
         {data.map((item) => {
-          return <img key={item._id} className="item profile-post" src={item.photo} alt={item.title}/>;
+          // return <img key={item._id} className="item profile-post" src={item.photo} alt={item.title}/>
+          return <ModalImage imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photo} alt={item.title} className="item profile-post"/>
         })}
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React,{useContext,useRef,useEffect,useState} from 'react'
 import { UserContext } from "../../App";
 import { useParams } from "react-router-dom";
+import ModalImage from 'react-modal-image';
 import {Link} from 'react-router-dom';
 import Error404 from "./Error404"
 import M from 'materialize-css';
@@ -171,12 +172,14 @@ const UserProfile = () => {
           <div className="gallery">
             {userProfile.posts.map((item) => {
               return (
-                <img
-                  key={item._id}
-                  className="item profile-post"
-                  src={item.photo}
-                  alt={item.title}
-                />
+                // <img
+                //   key={item._id}
+                //   className="item profile-post"
+                //   src={item.photo}
+                //   alt={item.title}
+                // />
+                <ModalImage imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photo} alt={item.title} className="item profile-post"/>
+
               );
             })}
           </div>
