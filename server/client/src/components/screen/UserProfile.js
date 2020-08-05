@@ -2,6 +2,7 @@ import React,{useContext,useRef,useEffect,useState} from 'react'
 import { UserContext } from "../../App";
 import { useParams } from "react-router-dom";
 import {Link} from 'react-router-dom';
+import Error404 from "./Error404"
 import M from 'materialize-css';
 const UserProfile = () => {
   const  followingModalu = useRef(null)
@@ -119,16 +120,14 @@ const UserProfile = () => {
   };
   return (
     <>
-      {userProfile ? (
+      ({userProfile ?(!userProfile.hasOwnProperty('error')?(
         <div className="profile-container">
           <div className="profile-title-container profile-title">
             <div>
-              <Link to="/profile/5efeb2d9ec69f00d5c81a3a2">
               <img 
                 className="profile-avatar"
                 src={userProfile.user.pic}
               />
-              </Link>
             </div>
             <div>
               <h5>{userProfile.user.name}</h5>
@@ -183,14 +182,14 @@ const UserProfile = () => {
           </div>
           
         </div>
-      ) : (
+      ): (<Error404/>) ): (
         <h2>loading...</h2>
       )}
        <div id="modal4" className="modal" ref={followedModalu} style={{color:"black"}}>
           <div className="modal-content">
       
                 <h5 style={{textAlign:"center"}}>Followers</h5>
-                {userProfile?userProfile.user.followers.map((item) => {
+                {userProfile&&!userProfile.hasOwnProperty('error')?userProfile.user.followers.map((item) => {
                   return   <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                     M.Modal.getInstance(followedModalu.current).close()
                   }}>
@@ -213,7 +212,7 @@ const UserProfile = () => {
       <div id="modal5" className="modal" ref={followingModalu} style={{color:"black"}}>
         <div className="modal-content">
           <h5 style={{textAlign:"center"}}>Following</h5>
-                {userProfile?  userProfile.user.following.map((item) => {
+                {userProfile&&!userProfile.hasOwnProperty('error')?  userProfile.user.following.map((item) => {
                 return  <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followingModalu.current).close()
                 }}>

@@ -203,3 +203,7 @@ nav{
 .can-click:hover{
   cursor: pointer;
 }
+
+.blue-link{
+  color: #184978 !important
+}
