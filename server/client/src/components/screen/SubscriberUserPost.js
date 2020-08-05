@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import LazyLoad from "react-lazyload";
 import { UserContext } from "../../App";
 import {Link} from 'react-router-dom';
 const SubscriberUserPost = () => {
@@ -124,6 +125,8 @@ const SubscriberUserPost = () => {
     <div className="home">
       {data.map((item) => {
         return (
+          <LazyLoad  height={100}  debounce={100}>
+
           <div className="card home-card" key={item._id}>
             <h5 className="post-title-container"> 
               <div className="post-title-avatar-postedBy">  
@@ -190,6 +193,7 @@ const SubscriberUserPost = () => {
               </form>
             </div>
           </div>
+          </LazyLoad>
         );
       })}
     </div>

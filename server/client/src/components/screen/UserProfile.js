@@ -1,6 +1,7 @@
 import React,{useContext,useRef,useEffect,useState} from 'react'
 import { UserContext } from "../../App";
 import { useParams } from "react-router-dom";
+import LazyLoad from "react-lazyload";
 import ModalImage from 'react-modal-image';
 import {Link} from 'react-router-dom';
 import Error404 from "./Error404"
@@ -170,7 +171,7 @@ const UserProfile = () => {
 
           </div>
           <div className="gallery">
-            {userProfile.posts.map((item) => {
+            {userProfile.posts.map((item,index) => {
               return (
                 // <img
                 //   key={item._id}
@@ -178,8 +179,11 @@ const UserProfile = () => {
                 //   src={item.photo}
                 //   alt={item.title}
                 // />
-                <ModalImage imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photo} alt={item.title} className="item profile-post"/>
-
+                <LazyLoad  height={200}  debounce={500} key={index}>
+                  <div>
+                  <ModalImage id={item._id} count={index+1} imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photo} alt={item.title} className="item profile-post"/>
+                  </div>
+                </LazyLoad>
               );
             })}
           </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "../../App";
 import LazyLoad from "react-lazyload";
-import Placeholder from "../Splaceholder"
 import { Link } from "react-router-dom";
 import M from "materialize-css";
 
@@ -138,7 +137,7 @@ const Home = () => {
       {data.map((item,index) => {
         return (
           <LazyLoad  height={100}  debounce={100}>
-          <div className="card home-card" >
+          <div className="card home-card" key={item._id}>
             <h5 className="post-title-container">
               <div className="post-title-avatar-postedBy">
                 <img src={item.postedBy.pic} className="post-title-avatar" />
