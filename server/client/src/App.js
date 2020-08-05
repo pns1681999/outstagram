@@ -1,4 +1,5 @@
 import React, { useEffect, createContext, useReducer, useContext } from "react";
+import LazyLoad from "react-lazyload";
 import NavBar from "./components/Navbar";
 import "./App.css";
 import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
@@ -68,10 +69,14 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <UserContext.Provider value={{ state, dispatch }}>
+       
       <BrowserRouter>
         <NavBar />
+        
         <Routing />
+        
       </BrowserRouter>
+      
     </UserContext.Provider>
   );
 }

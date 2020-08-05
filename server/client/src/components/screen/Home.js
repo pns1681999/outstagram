@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "../../App";
+import LazyLoad from "react-lazyload";
+import Placeholder from "../Splaceholder"
 import { Link } from "react-router-dom";
 import M from "materialize-css";
 
@@ -133,9 +135,10 @@ const Home = () => {
 
   return (
     <div className="home">
-      {data.map((item) => {
+      {data.map((item,index) => {
         return (
-          <div className="card home-card" key={item._id}>
+          <LazyLoad  height={100}  debounce={100}>
+          <div className="card home-card" >
             <h5 className="post-title-container">
               <div className="post-title-avatar-postedBy">
                 <img src={item.postedBy.pic} className="post-title-avatar" />
@@ -161,7 +164,7 @@ const Home = () => {
               )}
             </h5>
 
-            <div className="card-image">
+            <div className="card-image ">
               <img src={item.photo} />
             </div>
             <div className="card-content post-content">
@@ -225,6 +228,7 @@ const Home = () => {
               </form>
             </div>
           </div>
+          </LazyLoad>
         );
       })}
 

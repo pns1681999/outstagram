@@ -16,6 +16,7 @@
     "mongoose": "^5.9.19",
     "nodemailer": "^6.4.10",
     "nodemailer-sendgrid-transport": "^0.2.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "react-lazyload": "^3.0.0"
   }
 }
