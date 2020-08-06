@@ -6,13 +6,16 @@ import M from 'materialize-css'
 const Profile = () => {
   const  followingModal = useRef(null)
   const  followedModal = useRef(null)
+  const  changeName = useRef(null) 
   const [data, setData] = useState([]);
   const {state, dispatch} = useContext(UserContext);
   const [image,setImage]=useState("");
+  const [newName, setNewName] = useState("");
 
   useEffect(()=>{
     M.Modal.init(followingModal.current)
     M.Modal.init(followedModal.current)
+    M.Modal.init(changeName.current)
   },[])
 
   useEffect(() => {
@@ -64,11 +67,30 @@ const Profile = () => {
     }
   },[image]);
 
+  const updateName = () => {
+    if(newName){
+      fetch("/updatename",{
+        method:"put",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":"Bearer " +localStorage.getItem("jwt")
+        },
+        body:JSON.stringify({name:newName })
+      }).then(res=>res.json())
+      .then(result=>{
+        //console.log(result)
+        localStorage.setItem("user",JSON.stringify({...state,name:result.name}))
+        dispatch({type:"UPDATENAME",payload:result.name})
+        window.location.reload()
+
+      })
+    }
+  }
+
   const updatePhoto=(file)=>{
     setImage(file)
-
-    
   }
+  
   return (
     <div className="profile-container">
       
@@ -99,7 +121,15 @@ const Profile = () => {
          
         </div>
         <div>
-          <h5>{state?state.name:"loading..."}</h5>
+          <h5>{state?state.name:"loading..."} 
+            <i
+              className="material-icons modal-trigger"
+              data-target="modal4"
+              style={{color:"black", marginLeft:"0.5rem"}}
+            >
+              edit
+            </i> 
+          </h5>
           <h6>{state?state.email:"loading..."}</h6>
 
           <div className="profile-detail">
@@ -154,6 +184,21 @@ const Profile = () => {
                     <span className="text-bold"> {item.name} </span>
                   </div></Link> 
                 }):<h6>No following.</h6>}
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div>
+      </div>
+
+      <div id="modal4" className="modal" ref={changeName} style={{color:"black"}}>
+        <div className="modal-content" style={{textAlign:"center", paddingBottom:"0"}}>
+        <h5 style={{textAlign:"center"}}>Change your name</h5>
+        <input id='newName' type="text" placeholder="Your new name" value={newName} onChange={(e)=>{setNewName(e.target.value)}}/>
+        <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
+         onClick={()=>updateName()}
+        >
+          Change
+        </button>
         </div>
         <div className="modal-footer">
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>

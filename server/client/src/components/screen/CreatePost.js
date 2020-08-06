@@ -61,6 +61,7 @@ const CreatePost = () => {
 
   return (
     <div className="card input-field card-create-post">
+      <h5 className="text-bold">Create post</h5>
       <input type="text" placeholder="title" value={title} onChange={(e)=>setTitle(e.target.value)}/>
       <input type="text" placeholder="status" value={body} onChange={(e)=>setBody(e.target.value)}/>
       <div className="file-field input-field">
