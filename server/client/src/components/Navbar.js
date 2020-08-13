@@ -4,6 +4,7 @@ import {UserContext} from '../App'
 import M from 'materialize-css'
 const NavBar = () => {
   const  searchModal = useRef(null)
+  const  dropdownModal = useRef(null)
   const [search,setSearch] = useState('')
   const [userDetails,setUserDetails] = useState([])
    const {state,dispatch} = useContext(UserContext)
@@ -59,9 +60,23 @@ const NavBar = () => {
               exit_to_app
             </i>
             </Link>
-          </li>
+          </li>,
+          <li key="8" >
+          <a className='dropdown-trigger btn' href='#'onClick={openDropDown} >Profile</a>
+
+
+          <ul ref={dropdownModal} className='dropdown-content'>
+            <li><a href="#!">one</a></li>
+            <li><a href="#!">two</a></li>
+            <li className="divider" tabindex="-1"></li>
+            <li><a href="#!">three</a></li>
+            <li><a href="#!"><i className="material-icons">view_module</i>four</a></li>
+            <li><a href="#!"><i className="material-icons">cloud</i>five</a></li>
+          </ul>
+
+        </li>
        
-          
+      
          ]
      }else{
        return [
@@ -70,6 +85,15 @@ const NavBar = () => {
        
        ]
      }
+   }
+
+   const openDropDown = () => {
+     console.info(dropdownModal)
+     dropdownModal.current.style.display= 'block'
+     dropdownModal.current.style.opacity= '1'
+     dropdownModal.current.style.right= '10px'
+     dropdownModal.current.style.top= '65px'
+     dropdownModal.current.style.left= 'auto'
    }
 
 

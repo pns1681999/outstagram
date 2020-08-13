@@ -9,16 +9,25 @@ import M from 'materialize-css';
 const UserProfile = () => {
   const  followingModalu = useRef(null)
   const  followedModalu = useRef(null)
-
+  const  ImageModal = useRef(null)
   useEffect(()=>{
     M.Modal.init(followingModalu.current)
     M.Modal.init(followedModalu.current)
-  },[])
+    M.Modal.init(ImageModal.current)
 
+  },[])
+  const [data, setData] = useState([]);
   const [userProfile, setProfile] = useState(null);
   const { state, dispatch } = useContext(UserContext);
   const { userid } = useParams();
+  const [image,setImage]=useState("");
+  const [modalImage, setModalImage]=useState("");
+  const [modalBody, setModalBody]=useState("");
+  const [modalTitle, setModalTitle]=useState("");
+  const [modalComment, setModalComment]=useState([]);
+  const [modalLike, setModalLike]=useState([]);
 
+  const [modalId, setModalId]=useState("");
   //console.log(userid)
 
   const [showFollow,setShowFollow] = useState((state ? ()=>{
@@ -57,6 +66,8 @@ const UserProfile = () => {
       .then((result) => {
         //console.log(result);
         setProfile(result);
+        console.log(result);
+        setData(result.posts);
       });
   }, [userid]);
 
@@ -120,6 +131,104 @@ const UserProfile = () => {
 
       });
   };
+
+  const handleSetImage = (url,comments,likes,title,body,id)=>{
+
+    setModalImage(url);
+    setModalComment(comments);
+    setModalLike(likes);
+    setModalTitle(title);
+    setModalBody(body);
+    setModalId(id);
+    
+  
+  };
+  const makeComment = (text, postId) => {
+    fetch("/comment", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        text,
+        postId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        const newData = data.map((item) => {
+          if (item._id == result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const likePost = (id) => {
+    fetch("/like", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        postId: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        //console.log(result)
+        const newData = data.map((item) => {
+          if (item._id == result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const unlikePost = (id) => {
+    fetch("/unlike", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        postId: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        //console.log(result)
+        const newData = data.map((item) => {
+          if (item._id == result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       ({userProfile ?(!userProfile.hasOwnProperty('error')?(
@@ -136,7 +245,7 @@ const UserProfile = () => {
               <h6>{userProfile.user.email}</h6>
 
               <div className="profile-detail">
-                <h6><span className="text-bold">{userProfile.posts.length}</span> posts</h6>
+                <h6><span className="text-bold">{data.length}</span> posts</h6>
                 <h6 data-target="modal4" className="modal-trigger can-click"><span className="text-bold">{userProfile.user.followers.length}</span> followers</h6>
                 <h6 data-target="modal5" className="modal-trigger can-click"><span className="text-bold">{userProfile.user.following.length}</span> following</h6>
               </div>
@@ -166,25 +275,14 @@ const UserProfile = () => {
             </div>
 
        
-
+          
       
 
           </div>
           <div className="gallery">
-            {userProfile.posts.map((item,index) => {
-              return (
-                // <img
-                //   key={item._id}
-                //   className="item profile-post"
-                //   src={item.photo}
-                //   alt={item.title}
-                // />
-                <LazyLoad  height={200}  debounce={500} key={index}>
-                  <div>
-                  <ModalImage id={item._id} count={index+1} imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photo} alt={item.title} className="item profile-post"/>
-                  </div>
-                </LazyLoad>
-              );
+            {data.map((item,index) => {
+              return <img key={item._id} className="item profile-post modal-trigger" data-target="modal6" src={item.photo} alt={item.title} onClick={() => handleSetImage(item.photo,item.comments,item.likes,item.title,item.body,item._id)} alt={item.tit} />
+
             })}
           </div>
           
@@ -236,6 +334,62 @@ const UserProfile = () => {
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>
         </div>
       </div>
+
+      <div id="modal6" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
+        <div class="modal-content">
+          <div style={{ display:'flex', alignItems: 'center'  }}>
+           <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" />
+            <div style={{ flex: 1, overflow:"auto", height:"500px" ,padding: "5px"}} >
+              <div style={{borderBottom: "solid 1px #00000036"}}>
+              <h6><span>{modalBody}</span></h6>
+              <h6><b>{state?state.name:"loading..."}:</b><span>{modalTitle}</span></h6>  
+            </div>
+          <div className="example">
+                { modalComment.map((item)=>{
+                return(
+                <h6 ><span style={{ fontWeight: "500" }} className="text-bold">
+                  {item.postedBy.name}{" "}
+                </span>
+                  {item.text}
+              </h6>);
+                }) }
+            </div>  
+              <div className="like-container">
+                  {modalLike.includes(state?state._id:null) ? (
+                      <i
+                        className="material-icons"
+                        style={{ color: "red" ,paddingTop: "1px" }}
+                        onClick={() => unlikePost(modalId)}>
+                        favorite
+                      </i>
+                    ):(
+                      <i
+                        className="material-icons"
+                        onClick={() => likePost(modalId)}>
+                        favorite_border
+                      </i>
+                    )}
+                  <h6 className="text-bold">
+                  {modalLike.length} likes
+                  </h6>
+                
+               
+                
+              </div>
+              <form onSubmit={(e) => {
+                  e.preventDefault();
+                  if (e.target[0].value) {
+                    makeComment(e.target[0].value, modalId);
+                    e.target[0].value = null;
+                  } }}>
+                <input type="text" placeholder="add a comment" />
+              </form>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+      
     </>
 
   );
