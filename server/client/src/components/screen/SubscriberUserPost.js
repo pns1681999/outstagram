@@ -173,13 +173,40 @@ const SubscriberUserPost = () => {
               </div>
               <h6><span className="text-bold">{item.postedBy.name} </span>{item.title}</h6>
               <p>{item.body}</p>
-              {
-                item.comments.map(record=>{
-                  return(
-                  <h6 key={record._id}><span style={{fontWeight:"500"}}>{record.postedBy.name}  </span>{record.text}</h6>
-                  )
-                })
-              }
+              <div id={item._id + 'comment'} style={{display:'none'}}>
+              {item.comments.map((record) => {
+                  return (
+                    <h6 key={record._id}>
+                      <span style={{ fontWeight: "500" }}>
+                        {record.postedBy.name}{" "}
+                      </span>
+                      {record.text}
+                    </h6>
+                  );
+              })}
+              </div>
+
+              {item.comments.length?
+              <div id={item._id + 'show'}>
+                <h6 key={item.comments[0]._id}>
+                      <span style={{ fontWeight: "500" }}>
+                        {item.comments[0].postedBy.name}{" "}
+                      </span>
+                      {item.comments[0].text}
+                </h6>
+                {item.comments.length>1?<div style={{color:'#8e8e8e'}} onClick={()=>{
+                  document.getElementById(item._id + 'comment').style.display='block';
+                  document.getElementById(item._id + 'show').style.display='none';
+                  document.getElementById(item._id + 'hide').style.display='block';
+                }}>Xem tất cả {item.comments.length} bình luận.</div>
+                :"" }
+              </div>:""}
+
+              {item.comments.length > 1?<div id={item._id + 'hide'} style={{display:'none', color:'#8e8e8e'}} onClick={()=>{
+                document.getElementById(item._id + 'comment').style.display='none';
+                document.getElementById(item._id + 'show').style.display='block';
+                document.getElementById(item._id + 'hide').style.display='none';
+              }}>Ẩn tất cả bình luận.</div>:""}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
