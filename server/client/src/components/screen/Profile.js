@@ -7,7 +7,6 @@ import { model } from "mongoose";
 const Profile = () => {
   const  followingModal = useRef(null)
   const  followedModal = useRef(null)
-
   const  ImageModal = useRef(null)
 
   const [data, setData] = useState([]);
@@ -23,21 +22,10 @@ const Profile = () => {
 
 
 
-  const  changeName = useRef(null) 
-  const [data, setData] = useState([]);
-  const {state, dispatch} = useContext(UserContext);
-  const [image,setImage]=useState("");
-  const [newName, setNewName] = useState("");
-
-
   useEffect(()=>{
     M.Modal.init(followingModal.current)
     M.Modal.init(followedModal.current)
-
     M.Modal.init(ImageModal.current)
-
-    M.Modal.init(changeName.current)
-
   },[])
  
   useEffect(() => {
@@ -90,29 +78,8 @@ const Profile = () => {
     }
   },[image]);
 
-  const updateName = () => {
-    if(newName){
-      fetch("/updatename",{
-        method:"put",
-        headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " +localStorage.getItem("jwt")
-        },
-        body:JSON.stringify({name:newName })
-      }).then(res=>res.json())
-      .then(result=>{
-        //console.log(result)
-        localStorage.setItem("user",JSON.stringify({...state,name:result.name}))
-        dispatch({type:"UPDATENAME",payload:result.name})
-        window.location.reload()
-
-      })
-    }
-  }
-
   const updatePhoto=(file)=>{
     setImage(file)
-
   }
 
   const handleSetImage = (url,comments,likes,title,body,postedBy,id)=>{
@@ -214,10 +181,6 @@ const Profile = () => {
   };
 
 
-
-  }
-  
-
   return (
     <div className="profile-container">
       
@@ -248,15 +211,7 @@ const Profile = () => {
          
         </div>
         <div>
-          <h5>{state?state.name:"loading..."} 
-            <i
-              className="material-icons modal-trigger"
-              data-target="modal4"
-              style={{color:"black", marginLeft:"0.5rem"}}
-            >
-              edit
-            </i> 
-          </h5>
+          <h5>{state?state.name:"loading..."}</h5>
           <h6>{state?state.email:"loading..."}</h6>
 
           <div className="profile-detail">
@@ -317,7 +272,6 @@ const Profile = () => {
         </div>
       </div>
 
-
       <div id="modal5" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
         <div class="modal-content">
           <div style={{ display:'flex', alignItems: 'center'  }}>
@@ -370,20 +324,6 @@ const Profile = () => {
               </div>
             
           </div>
-
-      <div id="modal4" className="modal" ref={changeName} style={{color:"black"}}>
-        <div className="modal-content" style={{textAlign:"center", paddingBottom:"0"}}>
-        <h5 style={{textAlign:"center"}}>Change your name</h5>
-        <input id='newName' type="text" placeholder="Your new name" value={newName} onChange={(e)=>{setNewName(e.target.value)}}/>
-        <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
-         onClick={()=>updateName()}
-        >
-          Change
-        </button>
-        </div>
-        <div className="modal-footer">
-          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
-
         </div>
       </div>
 
@@ -395,6 +335,7 @@ const Profile = () => {
         })}
       </div>
     </div>
-    </div>
-    </div>
   );
+};
+
+export default Profile;

@@ -31,9 +31,7 @@ const Home = () => {
   }, []);
   useEffect(()=>{
     M.Modal.init(editPost.current)
-  },[]);
-
-
+  },[])
 
   const updatePost = (postId) => {
     if(newTitle || newBody){
@@ -56,7 +54,6 @@ const Home = () => {
       })    
    }
   };
-
   const likePost = (id) => {
     fetch("/like", {
       method: "put",
@@ -161,30 +158,7 @@ const Home = () => {
         console.log(error);
       });
   };
-  const handleEditPost = (id) =>{
-    setmodalPostId(id);
-  }
-  const updatePost = (postId) => {
-    if(newTitle || newBody){
-     
-    fetch(`/updatepost/${postId}`, {
-      method: "put",
-      headers: {
-        "Content-Type":"application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body:JSON.stringify ({
-        title:newTitle,
-        body:newBody
-      })
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        window.location.reload()
-        console.log(result)
-      })    
-   }
-  };
+
   return (
     <div className='home-container'>
     <div className="home" style={{flex:'2'}}>
@@ -225,8 +199,6 @@ const Home = () => {
                     edit
                   </i> 
               )}
-
-
             </h5>
 
             <div className="card-image ">
@@ -321,11 +293,7 @@ const Home = () => {
           </LazyLoad>
         );
       })}
-
-        <div id="modal2" className="modal" ref={editPost} style={{color:"black"}}>
-
       <div id="modal2" className="modal" ref={editPost} style={{color:"black"}}>
-
         <div className="modal-content" style={{paddingBottom:"0"}}>
         <h5>Change your title</h5>
         <input id='newTitle' type="text" placeholder="Your new title" value={newTitle} onChange={(e)=>{setNewTitle(e.target.value)}}/>
@@ -410,6 +378,7 @@ const Home = () => {
       </div>  
     </div>
   </div>
-  </div>
   );
-}
+};
+
+export default Home;
