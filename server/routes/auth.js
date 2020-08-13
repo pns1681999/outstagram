@@ -78,10 +78,23 @@ router.post("/signin", (req, res) => {
     bcrypt.compare(password,savedUser.password)
     .then(doMatch=>{
         if(doMatch){
-           // res.json({ message: "successfully signed in" });
+          //  User.find({email:{$ne: email}}, {followers: {$nin:{_id: _id}}})
+          //  .then(suggestion=>{
+          //    console.log(suggestion)
+          //     // res.json({ message: "successfully signed in" });
+              
+          //  })
+          User.find({$and : [{email: {$ne:email}}, {"followers": {$ne:savedUser._id}}]})
+          .select("-password")
+          .then(suggestion=>{
            const token = jwt.sign({_id:savedUser._id}, JWT_SECRET);
            const {_id,name,email,followers,following,pic} = savedUser;
-           res.json({token, user:{_id,name,email,followers,following,pic}});
+           res.json({token, user:{_id,name,email,followers,following,pic,suggestion}});
+          })
+          //  // res.json({ message: "successfully signed in" });
+          //  const token = jwt.sign({_id:savedUser._id}, JWT_SECRET);
+          //  const {_id,name,email,followers,following,pic} = savedUser;
+          //  res.json({token, user:{_id,name,email,followers,following,pic}});
         }
         else{
             return res.status(422).json({ error: "Invalid add email or password" });

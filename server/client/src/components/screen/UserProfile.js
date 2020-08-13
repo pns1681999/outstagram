@@ -231,7 +231,7 @@ const UserProfile = () => {
 
   return (
     <>
-      ({userProfile ?(!userProfile.hasOwnProperty('error')?(
+      {userProfile ?(!userProfile.hasOwnProperty('error')?(
         <div className="profile-container">
           <div className="profile-title-container profile-title">
             <div>

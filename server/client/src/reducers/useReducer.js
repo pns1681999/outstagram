@@ -20,5 +20,11 @@ export const reducer = (state, action) =>{
             pic:action.payload.pic
                 }
     }
+    if(action.type=="UPDATENAME"){
+        return {
+            ...state,
+            name:action.payload.name
+                }
+    }
     return state;
 }

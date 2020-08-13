@@ -25,6 +25,7 @@ router.get('/user/:id',requireLogin, (req,res)=>{
     })
 })
 
+
 router.put('/follow', requireLogin, (req,res)=>{
     User.findByIdAndUpdate(req.body.followId, {
         $push:{followers:req.user._id}
@@ -77,6 +78,20 @@ router.put('/updatepic',requireLogin,(req,res)=>{
     })
 
 })
+
+router.put('/updatename',requireLogin,(req,res)=>{
+    console.log(req.user._id)
+    User.findByIdAndUpdate(req.user._id, {
+        $set:{name:req.body.name}}, {new:true}, (err, result)=>{
+        if(err) {
+            return res.status(422).json({error:"name can not change"})
+        }
+       res.json(result)
+    })
+
+})
+
+
 router.post('/search-users',(req,res)=>{
     let userPattern=new RegExp("^"+req.body.query)
     User.find({email:{$regex:userPattern}})

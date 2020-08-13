@@ -32,6 +32,31 @@ const Home = () => {
   useEffect(()=>{
     M.Modal.init(editPost.current)
   },[]);
+
+
+
+  const updatePost = (postId) => {
+    if(newTitle || newBody){
+     
+    fetch(`/updatepost/${postId}`, {
+      method: "put",
+      headers: {
+        "Content-Type":"application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body:JSON.stringify ({
+        title:newTitle,
+        body:newBody
+      })
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        window.location.reload()
+        console.log(result)
+      })    
+   }
+  };
+
   const likePost = (id) => {
     fetch("/like", {
       method: "put",
@@ -161,11 +186,12 @@ const Home = () => {
    }
   };
   return (
-    <div className="home">
+    <div className='home-container'>
+    <div className="home" style={{flex:'2'}}>
       {data.map((item,index) => {
         return (
-          <LazyLoad  height={100}  debounce={100}>
-          <div className="card home-card" key={item._id}>
+          <LazyLoad key={item._id}  height={100}  debounce={100}>
+          <div className="card home-card" >
             <h5 className="post-title-container">
               <div className="post-title-avatar-postedBy">
                 <img src={item.postedBy.pic} className="post-title-avatar" />
@@ -199,6 +225,7 @@ const Home = () => {
                     edit
                   </i> 
               )}
+
 
             </h5>
 
@@ -243,16 +270,41 @@ const Home = () => {
                 {item.title}
               </h6>
               <p>{item.body}</p>
+              <div id={item._id + 'comment'} style={{display:'none'}}>
               {item.comments.map((record) => {
-                return (
-                  <h6 key={record._id}>
-                    <span style={{ fontWeight: "500" }}>
-                      {record.postedBy.name}{" "}
-                    </span>
-                    {record.text}
-                  </h6>
-                );
+                  return (
+                    <h6 key={record._id}>
+                      <span style={{ fontWeight: "500" }}>
+                        {record.postedBy.name}{" "}
+                      </span>
+                      {record.text}
+                    </h6>
+                  );
               })}
+              </div>
+
+              {item.comments.length?
+              <div id={item._id + 'show'}>
+                <h6 key={item.comments[0]._id}>
+                      <span style={{ fontWeight: "500" }}>
+                        {item.comments[0].postedBy.name}{" "}
+                      </span>
+                      {item.comments[0].text}
+                </h6>
+                {item.comments.length>1?<div className='show-comments' onClick={()=>{
+                  document.getElementById(item._id + 'comment').style.display='block';
+                  document.getElementById(item._id + 'show').style.display='none';
+                  document.getElementById(item._id + 'hide').style.display='block';
+                }}>View all {item.comments.length} comments</div>
+                :"" }
+              </div>:""}
+
+              {item.comments.length > 1?<div id={item._id + 'hide'} className='hide-comments' onClick={()=>{
+                document.getElementById(item._id + 'comment').style.display='none';
+                document.getElementById(item._id + 'show').style.display='block';
+                document.getElementById(item._id + 'hide').style.display='none';
+              }}>Hide all comments</div>:""}
+              
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -269,7 +321,11 @@ const Home = () => {
           </LazyLoad>
         );
       })}
+
         <div id="modal2" className="modal" ref={editPost} style={{color:"black"}}>
+
+      <div id="modal2" className="modal" ref={editPost} style={{color:"black"}}>
+
         <div className="modal-content" style={{paddingBottom:"0"}}>
         <h5>Change your title</h5>
         <input id='newTitle' type="text" placeholder="Your new title" value={newTitle} onChange={(e)=>{setNewTitle(e.target.value)}}/>
@@ -321,7 +377,39 @@ const Home = () => {
       </div> */}
                 
     </div>
-  );
-};
 
-export default Home;
+    <div className='home-suggestion'>
+      <div className='suggestion'>
+        {state?
+        <h5 className="suggetion-title-container">
+              <div className="suggetion-title-avatar-postedBy">
+                <img src={state.pic} className="suggetion-title-avatar" />
+                <div>
+                  <Link
+                    to={ "/profile"}
+                    className="suggetion-title-name"
+                  >
+                    {state.name}
+                  </Link>
+                    <div className="suggetion-title-email">{state.email}</div>
+                </div>
+              </div>
+              <div className='suggestion-row'>
+                <div className='suggestion-row-left'>
+                  <h6 style={{color:'#8e8e8e', fontWeight:500}}>Suggestion For You</h6>
+                </div>
+                <div className='suggestion-row-right'>
+                  {/* <div>See all</div> */}
+                </div>
+
+              </div>
+        </h5>
+        :""}
+        
+      
+      </div>  
+    </div>
+  </div>
+  </div>
+  );
+}

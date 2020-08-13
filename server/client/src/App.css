@@ -88,7 +88,33 @@ nav{
   font-size:1.15rem;
   font-weight:500;
 }
+.suggetion-title-container{
+  padding: 1rem 0.3rem;
+  margin:0;
+}
 
+.suggetion-title-avatar-postedBy{
+  display: inline-flex;
+  align-items: center;
+}
+
+.suggetion-title-avatar{
+  background-color: white;
+  width:4rem;
+  height:4rem;
+  border-radius:2rem;
+  object-fit:cover;
+  margin:0 0.7rem;
+}
+
+.suggetion-title-name{
+  font-size:1.15rem;
+  font-weight:500;
+}
+.suggetion-title-email{
+  font-size:1rem;
+  color: #8e8e8e;
+}
 .login-btn{
   width: 100%;
   margin: 20px 0px 15px 0px;
@@ -112,6 +138,35 @@ nav{
 
 .item{
   width: 30%;
+}
+
+.home-container{
+  display: flex;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.home{
+  flex: 2;
+}
+
+.home-suggestion{
+  flex: 1;
+}
+
+.suggestion{
+  /* background-color: gray; */
+  position: fixed;
+  width: 330px;
+  height: 400px;
+  top: 100px;
+  
+}
+
+@media only screen and (max-width: 1000px) {
+  .home-suggestion {
+    display: none;
+  }
 }
 
 .home-card{
@@ -211,7 +266,6 @@ nav{
 }
 
 
-
 .dropdown-open {
   right: 10px;
   background-color: #fff;
@@ -243,3 +297,26 @@ scrollbar-width: none;  /* Firefox */
 .example::-webkit-scrollbar {
   display: none;
 }
+
+.show-comments{
+  color: #8e8e8e;
+}
+.show-comments:hover{
+  cursor: pointer;
+}
+.hide-comments{
+  display: none;
+  color: #8e8e8e;
+}
+.hide-comments:hover{
+  cursor: pointer;
+}
+
+.suggestion-row{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+
+
