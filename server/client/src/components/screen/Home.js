@@ -13,7 +13,10 @@ const Home = () => {
   // useEffect(() => {
   //   M.Modal.init(likesModal.current);
   // }, []);
-  
+  const editPost = useRef(null)
+  const [newTitle, setNewTitle] = useState("");
+  const [newBody, setNewBody] = useState("");
+  const [modalPostId, setmodalPostId] = useState("");
   useEffect(() => {
     fetch("/allpost", {
       headers: {
@@ -26,7 +29,31 @@ const Home = () => {
         setData(result.posts);
       });
   }, []);
+  useEffect(()=>{
+    M.Modal.init(editPost.current)
+  },[])
 
+  const updatePost = (postId) => {
+    if(newTitle || newBody){
+     
+    fetch(`/updatepost/${postId}`, {
+      method: "put",
+      headers: {
+        "Content-Type":"application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body:JSON.stringify ({
+        title:newTitle,
+        body:newBody
+      })
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        window.location.reload()
+        console.log(result)
+      })    
+   }
+  };
   const likePost = (id) => {
     fetch("/like", {
       method: "put",
@@ -133,7 +160,8 @@ const Home = () => {
   };
 
   return (
-    <div className="home">
+    <div className='home-container'>
+    <div className="home" style={{flex:'2'}}>
       {data.map((item,index) => {
         return (
           <LazyLoad key={item._id}  height={100}  debounce={100}>
@@ -160,6 +188,16 @@ const Home = () => {
                 >
                   delete_outline
                 </i>
+              )}
+              {item.postedBy._id == state._id && (
+                  <i
+                    className="material-icons modal-trigger"
+                    data-target="modal2"
+                    style={{float:"right", color:"black", marginLeft:"0.5rem"}}
+                    onClick={()=> setmodalPostId(item._id)}
+                  >
+                    edit
+                  </i> 
               )}
             </h5>
 
@@ -225,19 +263,19 @@ const Home = () => {
                       </span>
                       {item.comments[0].text}
                 </h6>
-                {item.comments.length>1?<div style={{color:'#8e8e8e'}} onClick={()=>{
+                {item.comments.length>1?<div className='show-comments' onClick={()=>{
                   document.getElementById(item._id + 'comment').style.display='block';
                   document.getElementById(item._id + 'show').style.display='none';
                   document.getElementById(item._id + 'hide').style.display='block';
-                }}>Xem tất cả {item.comments.length} bình luận.</div>
+                }}>View all {item.comments.length} comments</div>
                 :"" }
               </div>:""}
 
-              {item.comments.length > 1?<div id={item._id + 'hide'} style={{display:'none', color:'#8e8e8e'}} onClick={()=>{
+              {item.comments.length > 1?<div id={item._id + 'hide'} className='hide-comments' onClick={()=>{
                 document.getElementById(item._id + 'comment').style.display='none';
                 document.getElementById(item._id + 'show').style.display='block';
                 document.getElementById(item._id + 'hide').style.display='none';
-              }}>Ẩn tất cả bình luận.</div>:""}
+              }}>Hide all comments</div>:""}
               
               <form
                 onSubmit={(e) => {
@@ -255,7 +293,23 @@ const Home = () => {
           </LazyLoad>
         );
       })}
-
+      <div id="modal2" className="modal" ref={editPost} style={{color:"black"}}>
+        <div className="modal-content" style={{paddingBottom:"0"}}>
+        <h5>Change your title</h5>
+        <input id='newTitle' type="text" placeholder="Your new title" value={newTitle} onChange={(e)=>{setNewTitle(e.target.value)}}/>
+        <h5>Change your body</h5>
+        <input id='newBody' type="text" placeholder="Your new body" value={newBody} onChange={(e)=>{setNewBody(e.target.value)}}/>
+        <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
+         style={{left:"43%"}}
+         onClick={()=>updatePost(modalPostId)}
+        >
+          Change
+        </button>
+        </div>
+        <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div>
+      </div>
       {/* <div
         id=  "modal-like"
         className="modal"
@@ -291,6 +345,39 @@ const Home = () => {
       </div> */}
                 
     </div>
+
+    <div className='home-suggestion'>
+      <div className='suggestion'>
+        {state?
+        <h5 className="suggetion-title-container">
+              <div className="suggetion-title-avatar-postedBy">
+                <img src={state.pic} className="suggetion-title-avatar" />
+                <div>
+                  <Link
+                    to={ "/profile"}
+                    className="suggetion-title-name"
+                  >
+                    {state.name}
+                  </Link>
+                    <div className="suggetion-title-email">{state.email}</div>
+                </div>
+              </div>
+              <div className='suggestion-row'>
+                <div className='suggestion-row-left'>
+                  <h6 style={{color:'#8e8e8e', fontWeight:500}}>Suggestion For You</h6>
+                </div>
+                <div className='suggestion-row-right'>
+                  {/* <div>See all</div> */}
+                </div>
+
+              </div>
+        </h5>
+        :""}
+        
+      
+      </div>  
+    </div>
+  </div>
   );
 };
 

@@ -194,19 +194,19 @@ const SubscriberUserPost = () => {
                       </span>
                       {item.comments[0].text}
                 </h6>
-                {item.comments.length>1?<div style={{color:'#8e8e8e'}} onClick={()=>{
+                {item.comments.length>1?<div className='show-comments' onClick={()=>{
                   document.getElementById(item._id + 'comment').style.display='block';
                   document.getElementById(item._id + 'show').style.display='none';
                   document.getElementById(item._id + 'hide').style.display='block';
-                }}>Xem tất cả {item.comments.length} bình luận.</div>
+                }}>View all {item.comments.length} comments</div>
                 :"" }
               </div>:""}
 
-              {item.comments.length > 1?<div id={item._id + 'hide'} style={{display:'none', color:'#8e8e8e'}} onClick={()=>{
+              {item.comments.length > 1?<div id={item._id + 'hide'} className='hide-comments' onClick={()=>{
                 document.getElementById(item._id + 'comment').style.display='none';
                 document.getElementById(item._id + 'show').style.display='block';
                 document.getElementById(item._id + 'hide').style.display='none';
-              }}>Ẩn tất cả bình luận.</div>:""}
+              }}>Hide all comments</div>:""}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
