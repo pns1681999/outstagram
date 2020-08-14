@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext,useRef } from "react";
 import {UserContext} from '../../App'
-import {Link } from 'react-router-dom'
+import {Link, withRouter } from 'react-router-dom'
 import ModalImage from 'react-modal-image'
 import M from 'materialize-css'
 import { model } from "mongoose";
@@ -20,7 +20,7 @@ const Profile = () => {
   const [modalLike, setModalLike]=useState([]);
   const [modalPostedby,setmodalPostedby]=useState({pic:'',name:''});
   const [modalId, setModalId]=useState("");
-
+  const [modaluserid,setModalUserId]=useState("");
 
 
   useEffect(()=>{
@@ -28,6 +28,7 @@ const Profile = () => {
     M.Modal.init(followedModal.current)
     M.Modal.init(ImageModal.current)
     M.Modal.init(changeName.current)
+    
   },[])
  
   useEffect(() => {
@@ -42,6 +43,7 @@ const Profile = () => {
         setData(result.myposts);
         
       });
+      
   }, []);
 
   useEffect(()=>{
@@ -103,15 +105,15 @@ const Profile = () => {
   }
 
   const handleSetImage = (url,comments,likes,title,body,postedBy,id)=>{
-
+    setModalUserId(state._id);
     setModalImage(url);
     setModalComment(comments);
     setModalLike(likes);
     setModalTitle(title);
     setModalBody(body);
-    setmodalPostedby({...modalPostedby,name:postedBy.name,pic:postedBy.pic})
-    setModalId(id);
     
+    setModalId(id);
+  
   
   }
   const makeComment = (text, postId) => {
@@ -319,17 +321,22 @@ const Profile = () => {
                 }) }
             </div>  
               <div className="like-container">
-                  {modalLike.includes(state?state._id:null) ? (
-                      <i
+                  {modalLike.includes(modaluserid) ? (
+                      <i 
                         className="material-icons"
                         style={{ color: "red" ,paddingTop: "1px" }}
-                        onClick={() => unlikePost(modalId)}>
+                        onClick={() =>{ unlikePost(modalId);
+                        modalLike.pop();
+                        }}>
                         favorite
                       </i>
                     ):(
-                      <i
+                      <i 
                         className="material-icons"
-                        onClick={() => likePost(modalId)}>
+                        onClick={() => {likePost(modalId);
+                        
+                        modalLike.push(modaluserid);
+                          }}>
                         favorite_border
                       </i>
                     )}
@@ -343,10 +350,20 @@ const Profile = () => {
               <form onSubmit={(e) => {
                   e.preventDefault();
                   if (e.target[0].value) {
+                    
                     makeComment(e.target[0].value, modalId);
-                    e.target[0].value = null;
-                  } }}>
-                <input type="text" placeholder="add a comment" />
+                    
+                    const temp=e.target[0].value;
+                    const obj={'text':temp,'postedBy':{'_id':modalId,'name':state.name}};
+                    modalComment.push(obj);
+                    console.log(modalComment);
+                    e.target[0].value=null;
+                 };
+                  
+                 
+                  
+                  }}>
+                <input type="text" placeholder="add a comment"  />
               </form>
               </div>
             

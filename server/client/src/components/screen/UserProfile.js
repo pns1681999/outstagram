@@ -26,7 +26,7 @@ const UserProfile = () => {
   const [modalTitle, setModalTitle]=useState("");
   const [modalComment, setModalComment]=useState([]);
   const [modalLike, setModalLike]=useState([]);
-
+  const [modaluserid,setModalUserId]=useState("");
   const [modalId, setModalId]=useState("");
   //console.log(userid)
 
@@ -68,6 +68,7 @@ const UserProfile = () => {
         setProfile(result);
         console.log(result);
         setData(result.posts);
+        
       });
   }, [userid]);
 
@@ -140,7 +141,7 @@ const UserProfile = () => {
     setModalTitle(title);
     setModalBody(body);
     setModalId(id);
-    
+    setModalUserId(state._id);
   
   };
   const makeComment = (text, postId) => {
@@ -355,17 +356,20 @@ const UserProfile = () => {
                 }) }
             </div>  
               <div className="like-container">
-                  {modalLike.includes(state?state._id:null) ? (
+                  {modalLike.includes(modaluserid) ? (
                       <i
                         className="material-icons"
                         style={{ color: "red" ,paddingTop: "1px" }}
-                        onClick={() => unlikePost(modalId)}>
+                        onClick={() =>{ unlikePost(modalId);
+                        modalLike.pop();
+                        }}>
                         favorite
                       </i>
                     ):(
                       <i
                         className="material-icons"
-                        onClick={() => likePost(modalId)}>
+                        onClick={() => {likePost(modalId);
+                        modalLike.push(modaluserid);}}>
                         favorite_border
                       </i>
                     )}
@@ -380,6 +384,9 @@ const UserProfile = () => {
                   e.preventDefault();
                   if (e.target[0].value) {
                     makeComment(e.target[0].value, modalId);
+                    const temp=e.target[0].value;
+                    const obj={'text':temp,'postedBy':{'_id':modalId,'name':state.name}};
+                    modalComment.push(obj);
                     e.target[0].value = null;
                   } }}>
                 <input type="text" placeholder="add a comment" />
