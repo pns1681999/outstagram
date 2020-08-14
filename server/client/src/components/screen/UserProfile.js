@@ -361,7 +361,7 @@ const UserProfile = () => {
                         className="material-icons"
                         style={{ color: "red" ,paddingTop: "1px" }}
                         onClick={() =>{ unlikePost(modalId);
-                        modalLike.pop();
+                        modalLike.splice(modalLike.indexOf(modaluserid),1);
                         }}>
                         favorite
                       </i>

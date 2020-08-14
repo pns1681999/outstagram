@@ -10,7 +10,7 @@ const NavBar = () => {
    const {state,dispatch} = useContext(UserContext)
    const history = useHistory()
    useEffect(()=>{
-       M.Modal.init(searchModal.current);
+       M.Modal.init(searchModal.current)
    },[])
    const renderList = ()=>{
      if(state){
@@ -61,20 +61,7 @@ const NavBar = () => {
             </i>
             </Link>
           </li>,
-          <li key="8" >
-          <a className='dropdown-trigger btn' href='#'onClick={openDropDown} >Profile</a>
-
-
-          <ul ref={dropdownModal} className='dropdown-content'>
-            <li><a href="#!">one</a></li>
-            <li><a href="#!">two</a></li>
-            <li className="divider" tabindex="-1"></li>
-            <li><a href="#!">three</a></li>
-            <li><a href="#!"><i className="material-icons">view_module</i>four</a></li>
-            <li><a href="#!"><i className="material-icons">cloud</i>five</a></li>
-          </ul>
-
-        </li>
+          
        
       
          ]
@@ -113,7 +100,6 @@ const NavBar = () => {
       })
    }
   return(
-    <div class="navbar-fixed">
       <nav>
       <div className="nav-wrapper white">
         <Link to={state?"/":"/signin"} className="brand-logo left">Outstagram</Link>
@@ -122,7 +108,6 @@ const NavBar = () => {
 
         </ul>
       </div>
-
       <div id="modal1" className="modal" ref={searchModal} style={{color:"black"}}>
         <div className="modal-content">
         <input
@@ -147,7 +132,6 @@ const NavBar = () => {
         </div>
       </div>
     </nav>
-  </div>
   )
 };
 

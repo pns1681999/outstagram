@@ -306,11 +306,25 @@ const Profile = () => {
           <div style={{ display:'flex', alignItems: 'center'  }}>
            <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" />
             <div style={{ flex: 1, overflow:"auto", height:"500px" ,padding: "5px"}} >
-              <div style={{borderBottom: "solid 1px #00000036"}}>
-              <h6><span>{modalBody}</span></h6>
-              <h6><b>{state?state.name:"loading..."}:</b><span>{modalTitle}</span></h6>  
-          </div>
+            <div style={{borderBottom: "solid 1px #00000036"}}>
+            <h5 className="post-title-container">
+              <div className="post-title-avatar-postedBy">
+                <img src={state?state.pic:"loading"} className="post-title-avatar" />
+                <Link
+                  to={ "/profile"
+                  }
+                  className="post-title-postedBy"
+                >
+                  {state?state.name:"loading..."}
+                </Link>
+              </div>
+            </h5>
+            </div>
           <div className="example">
+          
+              
+              <h6><span className="text-bold">{state?state.name:"loading..."}  </span><span>{modalTitle}</span></h6>  
+              <h7><span>{modalBody}</span></h7>
                 { modalComment.map((item)=>{
                 return(
                 <h6 ><span style={{ fontWeight: "500" }} className="text-bold">
@@ -326,7 +340,8 @@ const Profile = () => {
                         className="material-icons"
                         style={{ color: "red" ,paddingTop: "1px" }}
                         onClick={() =>{ unlikePost(modalId);
-                        modalLike.pop();
+                        //modalLike.pop();
+                        modalLike.splice(modalLike.indexOf(modaluserid),1);
                         }}>
                         favorite
                       </i>
@@ -359,9 +374,6 @@ const Profile = () => {
                     console.log(modalComment);
                     e.target[0].value=null;
                  };
-                  
-                 
-                  
                   }}>
                 <input type="text" placeholder="add a comment"  />
               </form>
