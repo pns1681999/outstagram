@@ -100,6 +100,7 @@ const NavBar = () => {
       })
    }
   return(
+    <div className='navbar-fixed'>
       <nav>
       <div className="nav-wrapper white">
         <Link to={state?"/":"/signin"} className="brand-logo left">Outstagram</Link>
@@ -134,6 +135,7 @@ const NavBar = () => {
         </div>
       </div>
     </nav>
+    </div>
   )
 };
 

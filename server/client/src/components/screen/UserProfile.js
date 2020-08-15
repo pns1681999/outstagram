@@ -280,22 +280,23 @@ const UserProfile = () => {
       
 
           </div>
-          <div className="gallery">
+          {data.length?  <div className="gallery">
             {data.map((item,index) => {
               return <img key={item._id} className="item profile-post modal-trigger" data-target="modal6" src={item.photo} alt={item.title} onClick={() => handleSetImage(item.photo,item.comments,item.likes,item.title,item.body,item._id)} alt={item.tit} />
 
             })}
-          </div>
-          
+            </div>:<h6 style={{textAlign:'center', color:'#8e8e8e', fontStyle:'italic'}}>No posts yet</h6> } 
+         
         </div>
       ): (<Error404/>) ): (
         <h2>loading...</h2>
       )}
-       <div id="modal4" className="modal" ref={followedModalu} style={{color:"black"}}>
-          <div className="modal-content">
+       <div id="modal4" className="modal follow-modal" ref={followedModalu}>
+          <div className="modal-content follow-content">
       
-                <h5 style={{textAlign:"center"}}>Followers</h5>
-                {userProfile&&!userProfile.hasOwnProperty('error')?userProfile.user.followers.map((item) => {
+                <h5 className='follow-title'>Followers</h5>
+                <div className='follow-list'>
+                {userProfile&&!userProfile.hasOwnProperty('error')?userProfile.user.followers.length?userProfile.user.followers.map((item) => {
                   return   <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                     M.Modal.getInstance(followedModalu.current).close()
                   }}>
@@ -306,19 +307,21 @@ const UserProfile = () => {
                       />
                       <span className="text-bold"> {item.name} </span>
                     </div></Link> 
-                  }):""
+                  }):<h6 style={{color:'#8e8e8e', fontStyle:'italic'}}>No followers</h6>:""
                 }
-
+                </div>
+                <div className="modal-footer follow-footer">
+                  <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+                </div>
           </div>
-          <div className="modal-footer">
-            <button className="modal-close waves-effect waves-green btn-flat" >close</button>
-          </div>
+          
       </div>
 
-      <div id="modal5" className="modal" ref={followingModalu} style={{color:"black"}}>
-        <div className="modal-content">
-          <h5 style={{textAlign:"center"}}>Following</h5>
-                {userProfile&&!userProfile.hasOwnProperty('error')?  userProfile.user.following.map((item) => {
+      <div id="modal5" className="modal follow-modal" ref={followingModalu}>
+        <div className="modal-content follow-content">
+          <h5 className='follow-title'>Following</h5>
+          <div className='follow-list'>
+                {userProfile&&!userProfile.hasOwnProperty('error')?userProfile.user.following.length?userProfile.user.following.map((item) => {
                 return  <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followingModalu.current).close()
                 }}>
@@ -329,14 +332,16 @@ const UserProfile = () => {
                     />
                     <span className="text-bold">{item.name} </span>
                   </div></Link> 
-                }):<h6>No following.</h6>}
+                }):<h6 style={{color:'#8e8e8e', fontStyle:'italic'}}>No following</h6>:<h6>loading...</h6>}
         </div>
-        <div className="modal-footer">
+        <div className="modal-footer follow-footer">
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>
         </div>
+        </div>
+        
       </div>
 
-      <div id="modal6" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
+      {/* <div id="modal6" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
         <div class="modal-content">
           <div style={{ display:'flex', alignItems: 'center'  }}>
            <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" />
@@ -390,6 +395,88 @@ const UserProfile = () => {
                     e.target[0].value = null;
                   } }}>
                 <input type="text" placeholder="add a comment" />
+              </form>
+              </div>
+            
+          </div>
+        </div>
+      </div> */}
+      <div id="modal6" className="modal post-detail-modal" ref={ImageModal} >
+        <div className="modal-content" style={{height: '100%'}}>
+          <div className='post-detail-container' >
+           {/* <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" /> */}
+           <div className='post-detail-left'> 
+              <img className='post-detail-img' src={modalImage}/>
+           </div>
+            <div className='post-detail-right'>
+            <div className='post-detail-profile'>
+            <h5 className="post-title-container">
+              <div className="post-title-avatar-postedBy">
+                <img src={state?state.pic:"loading"} className="post-title-avatar" />
+                <Link
+                  to={ "/profile"
+                  }
+                  className="post-title-postedBy"
+                >
+                  {state?state.name:"loading..."}
+                </Link>
+              </div>
+            </h5>
+            </div>
+          <div className="post-detail-comment">
+              <h6><span className="text-bold">{state?state.name:"loading..."}  </span><span>{modalTitle}</span></h6>  
+              <h7><span>{modalBody}</span></h7>
+                { modalComment.map((item)=>{
+                return(
+                <h6 ><span style={{ fontWeight: "500" }} className="text-bold">
+                  {item.postedBy.name}{" "}
+                </span>
+                  {item.text}
+              </h6>);
+                }) }
+          </div>  
+              <div className="like-container post-detail-like">
+                  {modalLike.includes(modaluserid) ? (
+                      <i 
+                        className="material-icons"
+                        style={{ color: "red" ,paddingTop: "1px" }}
+                        onClick={() =>{ unlikePost(modalId);
+                        //modalLike.pop();
+                        modalLike.splice(modalLike.indexOf(modaluserid),1);
+                        }}>
+                        favorite
+                      </i>
+                    ):(
+                      <i 
+                        className="material-icons"
+                        onClick={() => {likePost(modalId);
+                        
+                        modalLike.push(modaluserid);
+                          }}>
+                        favorite_border
+                      </i>
+                    )}
+                  <h6 className="text-bold">
+                  {modalLike.length} likes
+                  </h6>
+                
+               
+                
+              </div>
+              <form className="post-detail-add-comment" onSubmit={(e) => {
+                  e.preventDefault();
+                  if (e.target[0].value) {
+                    
+                    makeComment(e.target[0].value, modalId);
+                    
+                    const temp=e.target[0].value;
+                    const obj={'text':temp,'postedBy':{'_id':modalId,'name':state.name}};
+                    modalComment.push(obj);
+                    console.log(modalComment);
+                    e.target[0].value=null;
+                 };
+                  }}>
+                <input type="text" placeholder="add a comment"  />
               </form>
               </div>
             
