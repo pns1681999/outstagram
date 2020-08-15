@@ -188,7 +188,35 @@ const Home = () => {
         console.log(error);
       });
   };
-
+  const deleteComment = (postId,id,text,commentId) => {
+    fetch(`/deleteComment`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      }, body: JSON.stringify({
+        postedBy: id,
+        comment:text,
+        postId:postId,
+        cmtId:commentId
+      }),
+    })
+    .then((res) => res.json())
+    .then((result) => {
+      console.log(result);
+      const newData = data.map((item) => {
+        if (item._id == result._id) {
+          return result;
+        } else {
+          return item;
+        }
+      });
+      setData(newData);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
   return (
     <div className='home-container'>
     <div className="home" style={{flex:'2'}}>
@@ -276,9 +304,13 @@ const Home = () => {
                     <h6 key={record._id}>
                       <span style={{ fontWeight: "500" }}>
                         {record.postedBy.name}{" "}
+                        
                       </span>
                       {record.text}
+                  {(record.postedBy._id == state._id||item.postedBy._id==state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }} onClick={() => deleteComment(item._id,record.postedBy._id,record.text,record._id)}>clear</i>  }
+                      
                     </h6>
+                    
                   );
               })}
               </div>
@@ -290,6 +322,7 @@ const Home = () => {
                         {item.comments[0].postedBy.name}{" "}
                       </span>
                       {item.comments[0].text}
+                      {(item.comments[0].postedBy._id == state._id||item.postedBy._id==state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }} onClick={() => deleteComment(item._id,item.comments[0].postedBy._id,item.comments[0].text,item.comments[0]._id)}>clear</i>  }
                 </h6>
                 {item.comments.length>1?<div className='show-comments' onClick={()=>{
                   document.getElementById(item._id + 'comment').style.display='block';

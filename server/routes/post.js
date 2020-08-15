@@ -58,6 +58,7 @@ router.get('/mypost',requireLogin, (req, res) => {
     .populate("postedBy", "_id name pic")
     .populate("comments.postedBy","_id name")
     .then(myposts=>{
+        
         res.json({myposts})
     })
     .catch(err=>{
@@ -155,4 +156,30 @@ router.put('/updatepost/:postId',requireLogin,(req,res)=>{
         res.json(result)
     })
 })
+
+
+router.put('/deleteComment',requireLogin, (req, res)=>{
+    
+    const comment = {
+        _id:req.body.cmtId,
+        text:req.body.comment,
+        postedBy: req.body.postedBy
+    }
+    Post.findByIdAndUpdate(req.body.postId,{
+        $pull:{comments:comment}
+    },{
+        new:true
+    }).populate("comments.postedBy","_id name")
+    .populate("postedBy","_id name pic")
+    .exec((err, result)=>{
+        if(err){
+            return res.status(422).json({error:err})
+        }else{
+            res.json(result)
+        }
+    })
+})
+
+
+
 module.exports = router

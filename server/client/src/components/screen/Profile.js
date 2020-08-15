@@ -78,6 +78,7 @@ const Profile = () => {
     })
     .catch(err=>{
       console.log(err)
+
     })
     }
   },[image]);
@@ -130,7 +131,6 @@ const Profile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         const newData = data.map((item) => {
           if (item._id == result._id) {
             return result;
@@ -167,7 +167,7 @@ const Profile = () => {
           }
         });
         setData(newData);
-        console.log(data);
+       
       })
       .catch((err) => {
         console.log(err);
@@ -201,7 +201,35 @@ const Profile = () => {
         console.log(err);
       });
   };
-
+  const deleteComment = (postId,id,text,commentId) => {
+    fetch(`/deleteComment`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      }, body: JSON.stringify({
+        postedBy: id,
+        comment:text,
+        postId:postId,
+        cmtId:commentId
+      }),
+    })
+    .then((res) => res.json())
+    .then((result) => {
+      const newData = data.map((item) => {
+        if (item._id == result._id) {
+          return result;
+        } else {
+          return item;
+        }
+      });
+      setData(newData);
+      
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
 
   return (
     <div className="profile-container">
@@ -331,6 +359,8 @@ const Profile = () => {
                   {item.postedBy.name}{" "}
                 </span>
                   {item.text}
+                  <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }} onClick={() =>
+                    { deleteComment(modalId,item.postedBy._id,item.text,item._id);modalComment.splice(modalComment.map(function(e){return e._id;}).indexOf(item._id),1);}}>clear</i>
               </h6>);
                 }) }
             </div>  
@@ -371,7 +401,6 @@ const Profile = () => {
                     const temp=e.target[0].value;
                     const obj={'text':temp,'postedBy':{'_id':modalId,'name':state.name}};
                     modalComment.push(obj);
-                    console.log(modalComment);
                     e.target[0].value=null;
                  };
                   }}>
