@@ -254,13 +254,13 @@ const Profile = () => {
       
       
 
-      <div id="modal2" className="modal" ref={followedModal} style={{color:"black"}}>
-        <div className="modal-content">
+      <div id="modal2" className="modal follow-modal" ref={followedModal}>
+        <div className="modal-content follow-content">
       
-                <h5 style={{textAlign:"center"}}>Followers</h5>
+                <h5 className='follow-title'>Followers</h5>
 
-                
-                {state?state.followers.map((item) => {
+                <div className='follow-list'>
+                {state?state.followers.length?state.followers.map((item) => {
                 //console.log(state)
                 return   <Link key={item._id} to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followedModal.current).close()
@@ -272,18 +272,22 @@ const Profile = () => {
                     />
                     <span className="text-bold"> {item.name} </span>
                   </div></Link> 
-                }):""}
-
-        </div>
-        <div className="modal-footer">
+                }):<h6 style={{color:'#8e8e8e', fontStyle:'italic'}}>No followers</h6>:""}
+                </div>
+                <div className="modal-footer follow-footer">
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>
         </div>
+        </div>
+        {/* <div className="modal-footer follow-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div> */}
       </div>
 
-      <div id="modal3" className="modal" ref={followingModal} style={{color:"black"}}>
-        <div className="modal-content">
-        <h5 style={{textAlign:"center"}}>Following</h5>
-                {state?  state.following.map((item) => {
+      <div id="modal3" className="modal follow-modal" ref={followingModal} >
+        <div className="modal-content follow-content">
+        <h5 className='follow-title'>Following</h5>
+        <div className='follow-list'>
+                {state?state.following.length?state.following.map((item) => {
                 return  <Link key={item._id} to={item._id !== state._id ? "/profile/"+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followingModal.current).close()
                 }}>
@@ -294,11 +298,15 @@ const Profile = () => {
                     />
                     <span className="text-bold"> {item.name} </span>
                   </div></Link> 
-                }):<h6>No following.</h6>}
+                }):<h6 style={{color:'#8e8e8e', fontStyle:'italic'}}>No following</h6>:<h6>loading...</h6>}
         </div>
-        <div className="modal-footer">
+        <div className="modal-footer follow-footer">
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>
         </div>
+        </div>
+        {/* <div className="modal-footer">
+          <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+        </div> */}
       </div>
 
       <div id="modal5" className="modal post-detail-modal" ref={ImageModal} >
@@ -399,12 +407,15 @@ const Profile = () => {
         </div>
       </div>
         </div>
+      {data.length?
       <div className="gallery" >
         {data.map((item) => {
-           return <img key={item._id} className="item profile-post modal-trigger" data-target="modal5" src={item.photo} alt={item.title} onClick={() => handleSetImage(item.photo,item.comments,item.likes,item.title,item.body,item.postedBy,item._id)} alt={item.tit} />
+          return <img key={item._id} className="item profile-post modal-trigger" data-target="modal5" src={item.photo} alt={item.title} onClick={() => handleSetImage(item.photo,item.comments,item.likes,item.title,item.body,item.postedBy,item._id)} alt={item.tit} />
           // return  <ModalImage imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photole} className="item profile-post"/>
         })}
       </div>
+      :<h6 style={{textAlign:'center', color:'#8e8e8e', fontStyle:'italic'}}>No posts yet</h6> }
+      
     </div>
   );
 };

@@ -280,22 +280,23 @@ const UserProfile = () => {
       
 
           </div>
-          <div className="gallery">
+          {data.length?  <div className="gallery">
             {data.map((item,index) => {
               return <img key={item._id} className="item profile-post modal-trigger" data-target="modal6" src={item.photo} alt={item.title} onClick={() => handleSetImage(item.photo,item.comments,item.likes,item.title,item.body,item._id)} alt={item.tit} />
 
             })}
-          </div>
-          
+            </div>:<h6 style={{textAlign:'center', color:'#8e8e8e', fontStyle:'italic'}}>No posts yet</h6> } 
+         
         </div>
       ): (<Error404/>) ): (
         <h2>loading...</h2>
       )}
-       <div id="modal4" className="modal" ref={followedModalu} style={{color:"black"}}>
-          <div className="modal-content">
+       <div id="modal4" className="modal follow-modal" ref={followedModalu}>
+          <div className="modal-content follow-content">
       
-                <h5 style={{textAlign:"center"}}>Followers</h5>
-                {userProfile&&!userProfile.hasOwnProperty('error')?userProfile.user.followers.map((item) => {
+                <h5 className='follow-title'>Followers</h5>
+                <div className='follow-list'>
+                {userProfile&&!userProfile.hasOwnProperty('error')?userProfile.user.followers.length?userProfile.user.followers.map((item) => {
                   return   <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                     M.Modal.getInstance(followedModalu.current).close()
                   }}>
@@ -306,19 +307,21 @@ const UserProfile = () => {
                       />
                       <span className="text-bold"> {item.name} </span>
                     </div></Link> 
-                  }):""
+                  }):<h6 style={{color:'#8e8e8e', fontStyle:'italic'}}>No followers</h6>:""
                 }
-
+                </div>
+                <div className="modal-footer follow-footer">
+                  <button className="modal-close waves-effect waves-green btn-flat" >close</button>
+                </div>
           </div>
-          <div className="modal-footer">
-            <button className="modal-close waves-effect waves-green btn-flat" >close</button>
-          </div>
+          
       </div>
 
-      <div id="modal5" className="modal" ref={followingModalu} style={{color:"black"}}>
-        <div className="modal-content">
-          <h5 style={{textAlign:"center"}}>Following</h5>
-                {userProfile&&!userProfile.hasOwnProperty('error')?  userProfile.user.following.map((item) => {
+      <div id="modal5" className="modal follow-modal" ref={followingModalu}>
+        <div className="modal-content follow-content">
+          <h5 className='follow-title'>Following</h5>
+          <div className='follow-list'>
+                {userProfile&&!userProfile.hasOwnProperty('error')?userProfile.user.following.length?userProfile.user.following.map((item) => {
                 return  <Link key={item._id} to={item._id !== state._id ? '/profile/'+item._id:'/profile'} onClick={()=>{
                   M.Modal.getInstance(followingModalu.current).close()
                 }}>
@@ -329,11 +332,13 @@ const UserProfile = () => {
                     />
                     <span className="text-bold">{item.name} </span>
                   </div></Link> 
-                }):<h6>No following.</h6>}
+                }):<h6 style={{color:'#8e8e8e', fontStyle:'italic'}}>No following</h6>:<h6>loading...</h6>}
         </div>
-        <div className="modal-footer">
+        <div className="modal-footer follow-footer">
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>
         </div>
+        </div>
+        
       </div>
 
       {/* <div id="modal6" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
