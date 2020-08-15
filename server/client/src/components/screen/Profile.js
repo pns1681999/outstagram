@@ -1,23 +1,36 @@
 import React, { useEffect, useState, useContext,useRef } from "react";
 import {UserContext} from '../../App'
-import {Link } from 'react-router-dom'
+import {Link, withRouter } from 'react-router-dom'
 import ModalImage from 'react-modal-image'
 import M from 'materialize-css'
+import { model } from "mongoose";
 const Profile = () => {
   const  followingModal = useRef(null)
   const  followedModal = useRef(null)
+  const  ImageModal = useRef(null)
   const  changeName = useRef(null) 
   const [data, setData] = useState([]);
   const {state, dispatch} = useContext(UserContext);
   const [image,setImage]=useState("");
   const [newName, setNewName] = useState("");
+  const [modalImage, setModalImage]=useState("");
+  const [modalBody, setModalBody]=useState("");
+  const [modalTitle, setModalTitle]=useState("");
+  const [modalComment, setModalComment]=useState([]);
+  const [modalLike, setModalLike]=useState([]);
+  const [modalPostedby,setmodalPostedby]=useState({pic:'',name:''});
+  const [modalId, setModalId]=useState("");
+  const [modaluserid,setModalUserId]=useState("");
+
 
   useEffect(()=>{
     M.Modal.init(followingModal.current)
     M.Modal.init(followedModal.current)
+    M.Modal.init(ImageModal.current)
     M.Modal.init(changeName.current)
+    
   },[])
-
+ 
   useEffect(() => {
     fetch("/mypost", {
       headers: {
@@ -26,9 +39,11 @@ const Profile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        //console.log(result)
+        
         setData(result.myposts);
+        
       });
+      
   }, []);
 
   useEffect(()=>{
@@ -66,7 +81,6 @@ const Profile = () => {
     })
     }
   },[image]);
-
   const updateName = () => {
     if(newName){
       fetch("/updatename",{
@@ -86,11 +100,109 @@ const Profile = () => {
       })
     }
   }
-
   const updatePhoto=(file)=>{
     setImage(file)
   }
+
+  const handleSetImage = (url,comments,likes,title,body,postedBy,id)=>{
+    setModalUserId(state._id);
+    setModalImage(url);
+    setModalComment(comments);
+    setModalLike(likes);
+    setModalTitle(title);
+    setModalBody(body);
+    
+    setModalId(id);
   
+  
+  }
+  const makeComment = (text, postId) => {
+    fetch("/comment", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        text,
+        postId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        const newData = data.map((item) => {
+          if (item._id == result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const likePost = (id) => {
+    fetch("/like", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        postId: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        //console.log(result)
+        const newData = data.map((item) => {
+          if (item._id == result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const unlikePost = (id) => {
+    fetch("/unlike", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        postId: id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        //console.log(result)
+        const newData = data.map((item) => {
+          if (item._id == result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
   return (
     <div className="profile-container">
       
@@ -120,8 +232,7 @@ const Profile = () => {
           </div>
          
         </div>
-        <div>
-          <h5>{state?state.name:"loading..."} 
+        <div><h5>{state?state.name:"loading..."} 
             <i
               className="material-icons modal-trigger"
               data-target="modal4"
@@ -190,6 +301,88 @@ const Profile = () => {
         </div>
       </div>
 
+      <div id="modal5" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
+        <div class="modal-content">
+          <div style={{ display:'flex', alignItems: 'center'  }}>
+           <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" />
+            <div style={{ flex: 1, overflow:"auto", height:"500px" ,padding: "5px"}} >
+            <div style={{borderBottom: "solid 1px #00000036"}}>
+            <h5 className="post-title-container">
+              <div className="post-title-avatar-postedBy">
+                <img src={state?state.pic:"loading"} className="post-title-avatar" />
+                <Link
+                  to={ "/profile"
+                  }
+                  className="post-title-postedBy"
+                >
+                  {state?state.name:"loading..."}
+                </Link>
+              </div>
+            </h5>
+            </div>
+          <div className="example">
+          
+              
+              <h6><span className="text-bold">{state?state.name:"loading..."}  </span><span>{modalTitle}</span></h6>  
+              <h7><span>{modalBody}</span></h7>
+                { modalComment.map((item)=>{
+                return(
+                <h6 ><span style={{ fontWeight: "500" }} className="text-bold">
+                  {item.postedBy.name}{" "}
+                </span>
+                  {item.text}
+              </h6>);
+                }) }
+            </div>  
+              <div className="like-container">
+                  {modalLike.includes(modaluserid) ? (
+                      <i 
+                        className="material-icons"
+                        style={{ color: "red" ,paddingTop: "1px" }}
+                        onClick={() =>{ unlikePost(modalId);
+                        //modalLike.pop();
+                        modalLike.splice(modalLike.indexOf(modaluserid),1);
+                        }}>
+                        favorite
+                      </i>
+                    ):(
+                      <i 
+                        className="material-icons"
+                        onClick={() => {likePost(modalId);
+                        
+                        modalLike.push(modaluserid);
+                          }}>
+                        favorite_border
+                      </i>
+                    )}
+                  <h6 className="text-bold">
+                  {modalLike.length} likes
+                  </h6>
+                
+               
+                
+              </div>
+              <form onSubmit={(e) => {
+                  e.preventDefault();
+                  if (e.target[0].value) {
+                    
+                    makeComment(e.target[0].value, modalId);
+                    
+                    const temp=e.target[0].value;
+                    const obj={'text':temp,'postedBy':{'_id':modalId,'name':state.name}};
+                    modalComment.push(obj);
+                    console.log(modalComment);
+                    e.target[0].value=null;
+                 };
+                  }}>
+                <input type="text" placeholder="add a comment"  />
+              </form>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+
       <div id="modal4" className="modal" ref={changeName} style={{color:"black"}}>
         <div className="modal-content" style={{textAlign:"center", paddingBottom:"0"}}>
         <h5 style={{textAlign:"center"}}>Change your name</h5>
@@ -204,12 +397,11 @@ const Profile = () => {
           <button className="modal-close waves-effect waves-green btn-flat" >close</button>
         </div>
       </div>
-
         </div>
       <div className="gallery" >
         {data.map((item) => {
-          // return <img key={item._id} className="item profile-post" src={item.photo} alt={item.title}/>
-          return <ModalImage imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photo} alt={item.title} className="item profile-post"/>
+           return <img key={item._id} className="item profile-post modal-trigger" data-target="modal5" src={item.photo} alt={item.title} onClick={() => handleSetImage(item.photo,item.comments,item.likes,item.title,item.body,item.postedBy,item._id)} alt={item.tit} />
+          // return  <ModalImage imageBackgroundColor="white" hideDownload='true' hideZoom='true' showRotate='true' small={item.photo} large={item.photole} className="item profile-post"/>
         })}
       </div>
     </div>

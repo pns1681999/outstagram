@@ -4,12 +4,13 @@ import {UserContext} from '../App'
 import M from 'materialize-css'
 const NavBar = () => {
   const  searchModal = useRef(null)
+  const  dropdownModal = useRef(null)
   const [search,setSearch] = useState('')
   const [userDetails,setUserDetails] = useState([])
    const {state,dispatch} = useContext(UserContext)
    const history = useHistory()
    useEffect(()=>{
-       M.Modal.init(searchModal.current);
+       M.Modal.init(searchModal.current)
    },[])
    const renderList = ()=>{
      if(state){
@@ -59,9 +60,10 @@ const NavBar = () => {
               exit_to_app
             </i>
             </Link>
-          </li>
-       
+          </li>,
           
+       
+      
          ]
      }else{
        return [
@@ -70,6 +72,15 @@ const NavBar = () => {
        
        ]
      }
+   }
+
+   const openDropDown = () => {
+     console.info(dropdownModal)
+     dropdownModal.current.style.display= 'block'
+     dropdownModal.current.style.opacity= '1'
+     dropdownModal.current.style.right= '10px'
+     dropdownModal.current.style.top= '65px'
+     dropdownModal.current.style.left= 'auto'
    }
 
 
@@ -89,7 +100,6 @@ const NavBar = () => {
       })
    }
   return(
-    <div class="navbar-fixed">
       <nav>
       <div className="nav-wrapper white">
         <Link to={state?"/":"/signin"} className="brand-logo left">Outstagram</Link>
@@ -98,7 +108,6 @@ const NavBar = () => {
 
         </ul>
       </div>
-
       <div id="modal1" className="modal" ref={searchModal} style={{color:"black"}}>
         <div className="modal-content">
         <input
@@ -125,7 +134,6 @@ const NavBar = () => {
         </div>
       </div>
     </nav>
-  </div>
   )
 };
 

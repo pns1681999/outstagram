@@ -146,4 +146,13 @@ router.delete('/deletepost/:postId',requireLogin, (req, res)=>{
         
     })
 })
+router.put('/updatepost/:postId',requireLogin,(req,res)=>{
+    Post.findByIdAndUpdate(req.params.postId, {
+        $set:{title:req.body.title, body:req.body.body}}, {new:true}, (err, result)=>{
+        if(err) {
+            return res.status(422).json({error:"title can not change"})
+        }
+        res.json(result)
+    })
+})
 module.exports = router
