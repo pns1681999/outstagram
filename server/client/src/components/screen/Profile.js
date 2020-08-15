@@ -301,12 +301,15 @@ const Profile = () => {
         </div>
       </div>
 
-      <div id="modal5" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
-        <div class="modal-content">
-          <div style={{ display:'flex', alignItems: 'center'  }}>
-           <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" />
-            <div style={{ flex: 1, overflow:"auto", height:"500px" ,padding: "5px"}} >
-            <div style={{borderBottom: "solid 1px #00000036"}}>
+      <div id="modal5" className="modal post-detail-modal" ref={ImageModal} >
+        <div className="modal-content" style={{height: '100%'}}>
+          <div className='post-detail-container' >
+           {/* <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" /> */}
+           <div className='post-detail-left'> 
+              <img className='post-detail-img' src={modalImage}/>
+           </div>
+            <div className='post-detail-right'>
+            <div className='post-detail-profile'>
             <h5 className="post-title-container">
               <div className="post-title-avatar-postedBy">
                 <img src={state?state.pic:"loading"} className="post-title-avatar" />
@@ -320,9 +323,7 @@ const Profile = () => {
               </div>
             </h5>
             </div>
-          <div className="example">
-          
-              
+          <div className="post-detail-comment">
               <h6><span className="text-bold">{state?state.name:"loading..."}  </span><span>{modalTitle}</span></h6>  
               <h7><span>{modalBody}</span></h7>
                 { modalComment.map((item)=>{
@@ -333,8 +334,8 @@ const Profile = () => {
                   {item.text}
               </h6>);
                 }) }
-            </div>  
-              <div className="like-container">
+          </div>  
+              <div className="like-container post-detail-like">
                   {modalLike.includes(modaluserid) ? (
                       <i 
                         className="material-icons"
@@ -362,7 +363,7 @@ const Profile = () => {
                
                 
               </div>
-              <form onSubmit={(e) => {
+              <form className="post-detail-add-comment" onSubmit={(e) => {
                   e.preventDefault();
                   if (e.target[0].value) {
                     

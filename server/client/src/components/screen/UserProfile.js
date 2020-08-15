@@ -336,7 +336,7 @@ const UserProfile = () => {
         </div>
       </div>
 
-      <div id="modal6" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
+      {/* <div id="modal6" className="modal" ref={ImageModal} style={{color:"black",overflow: "hidden" }}>
         <div class="modal-content">
           <div style={{ display:'flex', alignItems: 'center'  }}>
            <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" />
@@ -390,6 +390,88 @@ const UserProfile = () => {
                     e.target[0].value = null;
                   } }}>
                 <input type="text" placeholder="add a comment" />
+              </form>
+              </div>
+            
+          </div>
+        </div>
+      </div> */}
+      <div id="modal6" className="modal post-detail-modal" ref={ImageModal} >
+        <div className="modal-content" style={{height: '100%'}}>
+          <div className='post-detail-container' >
+           {/* <img  style={{ flex: 3  }} src={modalImage}  alignItems="center" height="500px" width="100px" /> */}
+           <div className='post-detail-left'> 
+              <img className='post-detail-img' src={modalImage}/>
+           </div>
+            <div className='post-detail-right'>
+            <div className='post-detail-profile'>
+            <h5 className="post-title-container">
+              <div className="post-title-avatar-postedBy">
+                <img src={state?state.pic:"loading"} className="post-title-avatar" />
+                <Link
+                  to={ "/profile"
+                  }
+                  className="post-title-postedBy"
+                >
+                  {state?state.name:"loading..."}
+                </Link>
+              </div>
+            </h5>
+            </div>
+          <div className="post-detail-comment">
+              <h6><span className="text-bold">{state?state.name:"loading..."}  </span><span>{modalTitle}</span></h6>  
+              <h7><span>{modalBody}</span></h7>
+                { modalComment.map((item)=>{
+                return(
+                <h6 ><span style={{ fontWeight: "500" }} className="text-bold">
+                  {item.postedBy.name}{" "}
+                </span>
+                  {item.text}
+              </h6>);
+                }) }
+          </div>  
+              <div className="like-container post-detail-like">
+                  {modalLike.includes(modaluserid) ? (
+                      <i 
+                        className="material-icons"
+                        style={{ color: "red" ,paddingTop: "1px" }}
+                        onClick={() =>{ unlikePost(modalId);
+                        //modalLike.pop();
+                        modalLike.splice(modalLike.indexOf(modaluserid),1);
+                        }}>
+                        favorite
+                      </i>
+                    ):(
+                      <i 
+                        className="material-icons"
+                        onClick={() => {likePost(modalId);
+                        
+                        modalLike.push(modaluserid);
+                          }}>
+                        favorite_border
+                      </i>
+                    )}
+                  <h6 className="text-bold">
+                  {modalLike.length} likes
+                  </h6>
+                
+               
+                
+              </div>
+              <form className="post-detail-add-comment" onSubmit={(e) => {
+                  e.preventDefault();
+                  if (e.target[0].value) {
+                    
+                    makeComment(e.target[0].value, modalId);
+                    
+                    const temp=e.target[0].value;
+                    const obj={'text':temp,'postedBy':{'_id':modalId,'name':state.name}};
+                    modalComment.push(obj);
+                    console.log(modalComment);
+                    e.target[0].value=null;
+                 };
+                  }}>
+                <input type="text" placeholder="add a comment"  />
               </form>
               </div>
             

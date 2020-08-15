@@ -27,6 +27,7 @@ a{
 .like-container{
   display:flex;
   align-items:center;
+  
 }
 .like-container > h6{
   margin: auto 1rem;
@@ -326,20 +327,7 @@ nav{
 }
 
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.example {
-  width: 200px;
-  height: 70%;
-  
-  overflow-y: scroll;
 
--ms-overflow-style: none;  /* IE and Edge */
-scrollbar-width: none;  /* Firefox */
-}
-
-.example::-webkit-scrollbar {
-  display: none;
-}
 
 .show-comments{
   color: #8e8e8e;
@@ -378,4 +366,69 @@ scrollbar-width: none;  /* Firefox */
   margin: 0 auto;
   color: #8e8e8e;
   font-size: 0.8rem;
+}
+.post-detail-modal{
+  color:black;
+  overflow: hidden;
+  width:80%;
+  height:80%;
+}
+.post-detail-container{
+  display: flex;
+  height: 100%;
+}
+.post-detail-left{
+  margin-right: 1rem;
+  height: 100%;
+  flex: 2;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  border: #dedede solid 1px;
+
+}
+.post-detail-img{
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+
+}
+
+.post-detail-right{
+  flex: 1;
+  border: #dedede solid 1px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.post-detail-profile{
+  border-bottom: #dedede solid 1px; 
+  flex:2;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.post-detail-comment {
+  /* width: 200px; */
+  height: auto;
+  width: 100%;
+  overflow-y: scroll;
+  border-bottom: #dedede solid 1px; 
+  flex:12;
+  padding: 5px;
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
+}
+
+.post-detail-comment::-webkit-scrollbar {
+  display: none;
+}
+
+.post-detail-like{
+  flex:1;
+  padding: 5px;
+}
+.post-detail-add-comment{
+  flex:2;
+  padding: 5px;
 }
