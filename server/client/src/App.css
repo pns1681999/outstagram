@@ -88,17 +88,17 @@ nav{
   font-size:1.15rem;
   font-weight:500;
 }
-.suggetion-title-container{
+.suggestion-title-container{
   padding: 1rem 0.3rem;
   margin:0;
 }
 
-.suggetion-title-avatar-postedBy{
+.suggestion-title-avatar-postedBy{
   display: inline-flex;
   align-items: center;
 }
 
-.suggetion-title-avatar{
+.suggestion-title-avatar{
   background-color: white;
   width:4rem;
   height:4rem;
@@ -107,11 +107,38 @@ nav{
   margin:0 0.7rem;
 }
 
-.suggetion-title-name{
+.suggestion-title-name{
   font-size:1.15rem;
   font-weight:500;
 }
-.suggetion-title-email{
+.suggestion-title-email{
+  font-size:1rem;
+  color: #8e8e8e;
+}
+
+.suggestion-item-container{
+  padding: 0.2rem 0.3rem;
+  margin:0;
+}
+
+.suggestion-item-avatar-postedBy{
+  display: inline-flex;
+  align-items: center;
+}
+
+.suggestion-item-avatar{
+  width:2rem;
+  height:2rem;
+  border-radius:1rem;
+  object-fit:cover;
+  margin:0 0.7rem;
+}
+
+.suggestion-item-name{
+  font-size:1.15rem;
+  font-weight:500;
+}
+.suggestion-item-email{
   font-size:1rem;
   color: #8e8e8e;
 }
@@ -140,6 +167,22 @@ nav{
   width: 30%;
 }
 
+.edit-icon{
+  float:right;
+  color:#8e8e8e;
+  margin-left:0.5rem;
+}
+.edit-icon:hover{
+  color: black;
+}
+
+.delete-icon{
+  float: right;
+  color: #8e8e8e;
+}
+.delete-icon:hover{
+  color: black;
+}
 .home-container{
   display: flex;
   max-width: 1000px;
@@ -284,7 +327,22 @@ nav{
   width: 100%;
   justify-content: space-between;
 }
+.suggestion-row-right{
+  display: flex;
+  align-items: center;
+}
 
-.suggestion-row-left{
+.text-follow{
+  color:#0095f6;
+  font-size:1.15 rem
+}
 
+.text-follow:hover{
+  cursor: pointer;
+}
+
+.infor{
+  margin: 0 auto;
+  color: #8e8e8e;
+  font-size: 0.8rem;
 }

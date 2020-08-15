@@ -206,7 +206,7 @@ const SubscriberUserPost = () => {
                 document.getElementById(item._id + 'comment').style.display='none';
                 document.getElementById(item._id + 'show').style.display='block';
                 document.getElementById(item._id + 'hide').style.display='none';
-              }}>Hide all comments</div>:""}
+              }}>Hide comments</div>:""}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();

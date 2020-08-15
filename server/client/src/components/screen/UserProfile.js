@@ -74,7 +74,7 @@ const UserProfile = () => {
       .then((res) => res.json())
       .then((data) => {
         //console.log(data);
-        dispatch({type:"UPDATE", payload:{following:data.following, followers:data.followers}})
+        dispatch({type:"UPDATE", payload:{following:data.following, followers:data.followers, suggestion:data.suggestion}})
         localStorage.setItem("user", JSON.stringify(data))
         setProfile((prevState)=>{
           return {
@@ -104,7 +104,7 @@ const UserProfile = () => {
       .then((res) => res.json())
       .then((data) => {
         // console.log(data);
-        dispatch({type:"UPDATE", payload:{following:data.following, followers:data.followers}})
+        dispatch({type:"UPDATE", payload:{following:data.following, followers:data.followers, suggestion:data.suggestion}})
         localStorage.setItem("user", JSON.stringify(data))
         setProfile((prevState)=>{
           const newFollower = prevState.user.followers.filter(item=>item._id != data._id)

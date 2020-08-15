@@ -25,7 +25,7 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
+        //console.log(result);
         setData(result.posts);
       });
   }, []);
@@ -50,9 +50,39 @@ const Home = () => {
       .then((res) => res.json())
       .then((result) => {
         window.location.reload()
-        console.log(result)
+        //console.log(result)
       })    
    }
+  };
+  const followUser = (userid) => {
+    fetch("/follow", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        followId: userid,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        //console.log(data);
+        dispatch({type:"UPDATE", payload:{following:data.following, followers:data.followers, suggestion:data.suggestion}})
+        localStorage.setItem("user", JSON.stringify(data))
+        //console.log(state)
+        // setProfile((prevState)=>{
+        //   return {
+        //     ...prevState,
+        //     user:{
+        //       ...prevState.user,
+        //       followers:[...prevState.user.followers,{pic:data.pic, _id: data._id, name:data.name}]
+        //     }
+        //   }
+        // })
+        //console.log(userProfile)
+        //setShowFollow(false)
+      });
   };
   const likePost = (id) => {
     fetch("/like", {
@@ -124,7 +154,7 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
+        //console.log(result);
         const newData = data.map((item) => {
           if (item._id == result._id) {
             return result;
@@ -148,7 +178,7 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
+        //console.log(result);
         const newData = data.filter((item) => {
           return item._id !== result._id;
         });
@@ -182,8 +212,7 @@ const Home = () => {
               </div>
               {item.postedBy._id == state._id && (
                 <i
-                  className="material-icons"
-                  style={{ float: "right" }}
+                  className="material-icons delete-icon"
                   onClick={() => deletePost(item._id)}
                 >
                   delete_outline
@@ -191,9 +220,8 @@ const Home = () => {
               )}
               {item.postedBy._id == state._id && (
                   <i
-                    className="material-icons modal-trigger"
+                    className="material-icons modal-trigger edit-icon"
                     data-target="modal2"
-                    style={{float:"right", color:"black", marginLeft:"0.5rem"}}
                     onClick={()=> setmodalPostId(item._id)}
                   >
                     edit
@@ -275,7 +303,7 @@ const Home = () => {
                 document.getElementById(item._id + 'comment').style.display='none';
                 document.getElementById(item._id + 'show').style.display='block';
                 document.getElementById(item._id + 'hide').style.display='none';
-              }}>Hide all comments</div>:""}
+              }}>Hide comments</div>:""}
               
               <form
                 onSubmit={(e) => {
@@ -349,32 +377,59 @@ const Home = () => {
     <div className='home-suggestion'>
       <div className='suggestion'>
         {state?
-        <h5 className="suggetion-title-container">
-              <div className="suggetion-title-avatar-postedBy">
-                <img src={state.pic} className="suggetion-title-avatar" />
+        <h5 className="suggestion-title-container">
+              <div className="suggestion-title-avatar-postedBy">
+                <img src={state.pic} className="suggestion-title-avatar" />
                 <div>
                   <Link
                     to={ "/profile"}
-                    className="suggetion-title-name"
+                    className="suggestion-title-name"
                   >
                     {state.name}
                   </Link>
-                    <div className="suggetion-title-email">{state.email}</div>
+                    <div className="suggestion-title-email">{state.email}</div>
                 </div>
-              </div>
-              <div className='suggestion-row'>
-                <div className='suggestion-row-left'>
-                  <h6 style={{color:'#8e8e8e', fontWeight:500}}>Suggestion For You</h6>
-                </div>
-                <div className='suggestion-row-right'>
-                  {/* <div>See all</div> */}
-                </div>
-
               </div>
         </h5>
         :""}
+        <div className='suggestion-row'>
+          <div className='suggestion-row-left'>
+            <h6 style={{color:'#8e8e8e', fontWeight:500}}>Suggestion For You</h6>
+          </div>
+          <div className='suggestion-row-right'>
+            {/* <div>See all</div> */}
+          </div>
+        </div>
+        {state?state.suggestion.map((sug, index)=>{
+          if(index<5){
+            return(
+              <div className='suggestion-row'>
+                <div className='suggestion-row-left'>
+                  <h5 className="suggestion-item-container">
+                    <div className="suggestion-item-avatar-postedBy">
+                      <img src={sug.pic} className="suggestion-item-avatar" />
+                      <div>
+                        <Link
+                          to={ "/profile/"+sug._id}
+                          className="suggestion-item-name"
+                        >
+                          {sug.name}
+                        </Link>
+                      </div>
+                    </div>
+                  </h5>
+                </div>
+                <div className='suggestion-row-right'>
+                  <div className='text-bold text-follow' onClick={()=>followUser(sug._id)} >Follow</div>
+                </div>
+              </div>
+            )
+          }
+        }):""}
         
-      
+        <div className='suggestion-row'>
+          <div className='infor'>Đồ án môn học Thiết kế phần mềm CQ-17/31</div>
+        </div>
       </div>  
     </div>
   </div>

@@ -39,7 +39,12 @@ router.put('/follow', requireLogin, (req,res)=>{
         }, {new:true})
         .populate("followers", "_id name pic")
         .populate("following", "_id name pic").select("-password").then(result=>{
-            res.json(result)
+            User.find({$and : [{email: {$ne:result.email}}, {"followers": {$ne:result._id}}]})
+            .select("-password")
+            .then(suggestion=>{
+                res.json({...result._doc, suggestion})
+            })
+            
         }).catch(err=>{
             return res.status(422).json({error:err})
         })
@@ -60,7 +65,11 @@ router.put('/unfollow', requireLogin, (req,res)=>{
         }, {new:true})
         .populate("followers", "_id name pic")
         .populate("following", "_id name pic").select("-password").then(result=>{
-            res.json(result)
+            User.find({$and : [{email: {$ne:result.email}}, {"followers": {$ne:result._id}}]})
+            .select("-password")
+            .then(suggestion=>{
+                res.json({...result._doc, suggestion})
+            })
         }).catch(err=>{
             return res.status(422).json({error:err})
         })
