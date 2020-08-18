@@ -230,6 +230,36 @@ const UserProfile = () => {
       });
   };
 
+  const deleteComment = (postId,id,text,commentId) => {
+    fetch(`/deleteComment`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      }, body: JSON.stringify({
+        postedBy: id,
+        comment:text,
+        postId:postId,
+        cmtId:commentId
+      }),
+    })
+    .then((res) => res.json())
+    .then((result) => {
+      const newData = data.map((item) => {
+        if (item._id == result._id) {
+          return result;
+        } else {
+          return item;
+        }
+      });
+      setData(newData);
+      
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+
   return (
     <>
       {userProfile ?(!userProfile.hasOwnProperty('error')?(
@@ -412,19 +442,19 @@ const UserProfile = () => {
             <div className='post-detail-profile'>
             <h5 className="post-title-container">
               <div className="post-title-avatar-postedBy">
-                <img src={state?state.pic:"loading"} className="post-title-avatar" />
+                <img src={userProfile?userProfile.user.pic:"loading..."} className="post-title-avatar" />
                 <Link
                   to={ "/profile"
                   }
                   className="post-title-postedBy"
                 >
-                  {state?state.name:"loading..."}
+                  {userProfile?userProfile.user.name:"loading..."}
                 </Link>
               </div>
             </h5>
             </div>
           <div className="post-detail-comment">
-              <h6><span className="text-bold">{state?state.name:"loading..."}  </span><span>{modalTitle}</span></h6>  
+              <h6><span className="text-bold">{userProfile?userProfile.user.name:"loading..."}  </span><span>{modalTitle}</span></h6>  
               <h7><span>{modalBody}</span></h7>
                 { modalComment.map((item)=>{
                 return(
@@ -432,6 +462,9 @@ const UserProfile = () => {
                   {item.postedBy.name}{" "}
                 </span>
                   {item.text}
+                  {(item.postedBy._id == state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }}
+                   onClick={() => {deleteComment(modalId,item.postedBy._id,item.text,item._id);modalComment.splice(modalComment.map(function(e){return e._id;}).indexOf(item._id),1); }}>clear</i>  }
+
               </h6>);
                 }) }
           </div>  
