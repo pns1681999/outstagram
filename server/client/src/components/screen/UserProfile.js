@@ -462,7 +462,7 @@ const UserProfile = () => {
                   {item.postedBy.name}{" "}
                 </span>
                   {item.text}
-                  {(item.postedBy._id == state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }}
+                  {(item.postedBy._id === state._id) && <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }}
                    onClick={() => {deleteComment(modalId,item.postedBy._id,item.text,item._id);modalComment.splice(modalComment.map(function(e){return e._id;}).indexOf(item._id),1); }}>clear</i>  }
 
               </h6>);
@@ -503,7 +503,7 @@ const UserProfile = () => {
                     makeComment(e.target[0].value, modalId);
                     
                     const temp=e.target[0].value;
-                    const obj={'text':temp,'postedBy':{'_id':modalId,'name':state.name}};
+                    const obj={'text':temp,'postedBy':{'_id':modaluserid,'name':state.name}};
                     modalComment.push(obj);
                     console.log(modalComment);
                     e.target[0].value=null;

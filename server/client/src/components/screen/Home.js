@@ -307,7 +307,7 @@ const Home = () => {
                         
                       </span>
                       {record.text}
-                  {(record.postedBy._id == state._id||item.postedBy._id==state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }} onClick={() => deleteComment(item._id,record.postedBy._id,record.text,record._id)}>clear</i>  }
+                  {(record.postedBy._id ===state._id||item.postedBy._id===state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }} onClick={() => deleteComment(item._id,record.postedBy._id,record.text,record._id)}>clear</i>  }
                       
                     </h6>
                     
@@ -322,7 +322,7 @@ const Home = () => {
                         {item.comments[0].postedBy.name}{" "}
                       </span>
                       {item.comments[0].text}
-                      {(item.comments[0].postedBy._id == state._id||item.postedBy._id==state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }} onClick={() => deleteComment(item._id,item.comments[0].postedBy._id,item.comments[0].text,item.comments[0]._id)}>clear</i>  }
+                      {(item.comments[0].postedBy._id === state._id||item.postedBy._id===state._id)&& <i className="material-icons comment" style={{float: "right" ,color:"#0000001c" }} onClick={() => deleteComment(item._id,item.comments[0].postedBy._id,item.comments[0].text,item.comments[0]._id)}>clear</i>  }
                 </h6>
                 {item.comments.length>1?<div className='show-comments' onClick={()=>{
                   document.getElementById(item._id + 'comment').style.display='block';
